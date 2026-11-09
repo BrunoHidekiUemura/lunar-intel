@@ -24,9 +24,27 @@
 
         <section id="tab-portfolio" class="tab-content active">
             <div class="panel">
-                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:20px;">
                     <h2><i class="fa-solid fa-building"></i> Meu portfólio de imóveis</h2>
                     <button class="btn" id="btn-novo-imovel">+ Novo imóvel</button>
+                </div>
+                <div class="grid-form">
+                    <div class="input-group"><label>Buscar por título ou bairro</label><input type="text" id="portfolio-busca" placeholder="Ex: Jardins"></div>
+                    <div class="input-group"><label>Status</label>
+                        <select id="portfolio-status">
+                            <option value="">Todos</option>
+                            <option value="Disponivel">Disponível</option>
+                            <option value="Vendido">Vendido</option>
+                            <option value="Inativo">Inativo</option>
+                        </select>
+                    </div>
+                    <div class="input-group"><label>Ordenar por</label>
+                        <select id="portfolio-ordenar">
+                            <option value="titulo">Título (A-Z)</option>
+                            <option value="preco-asc">Preço (menor-maior)</option>
+                            <option value="preco-desc">Preço (maior-menor)</option>
+                        </select>
+                    </div>
                 </div>
             </div>
             <div class="property-grid" id="grid-portfolio" style="margin-top:20px;"></div>
@@ -37,7 +55,7 @@
                 <h2><i class="fa-solid fa-calendar-check"></i> Solicitações de visita</h2>
                 <div class="table-wrap">
                     <table>
-                        <thead><tr><th>Imóvel</th><th>Data da visita</th><th>Status</th><th>Ações</th></tr></thead>
+                        <thead><tr><th>Cliente</th><th>Imóvel</th><th>Data da visita</th><th>Status</th><th>Ações</th></tr></thead>
                         <tbody id="tabela-solicitacoes"></tbody>
                     </table>
                 </div>
@@ -62,6 +80,11 @@
                     </div>
                     <button type="submit" class="btn">Salvar alterações</button>
                 </form>
+            </div>
+            <div class="panel">
+                <h2>Encerrar conta</h2>
+                <p style="color:var(--text-dim); margin-bottom:16px;">Esta ação inativa sua conta. Você poderá voltar a usar o sistema entrando em contato com a administração.</p>
+                <button class="btn btn-danger" id="btn-inativar">Inativar minha conta</button>
             </div>
         </section>
     </div>

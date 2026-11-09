@@ -39,7 +39,7 @@
                 <h2><i class="fa-solid fa-house-chimney"></i> Todos os imóveis</h2>
                 <div class="table-wrap">
                     <table>
-                        <thead><tr><th>Título</th><th>Tipo</th><th>Preço</th><th>Status</th><th>Corretor (ID)</th></tr></thead>
+                        <thead><tr><th>Título</th><th>Tipo</th><th>Preço</th><th>Status</th><th>Corretor</th></tr></thead>
                         <tbody id="tabela-imoveis"></tbody>
                     </table>
                 </div>
@@ -48,7 +48,10 @@
 
         <section id="tab-relatorio" class="tab-content">
             <div class="panel">
-                <h2><i class="fa-solid fa-chart-column"></i> Desempenho por corretor</h2>
+                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:20px;">
+                    <h2><i class="fa-solid fa-chart-column"></i> Desempenho por corretor</h2>
+                    <button class="btn btn-secondary" id="btn-exportar-relatorio"><i class="fa-solid fa-file-arrow-down"></i> Exportar CSV</button>
+                </div>
                 <div class="table-wrap">
                     <table>
                         <thead><tr><th>Corretor</th><th>Vendas realizadas</th></tr></thead>

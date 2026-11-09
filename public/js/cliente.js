@@ -65,10 +65,12 @@ async function carregarCatalogo() {
   const tipo = document.getElementById('filtro-tipo').value;
   const quartos = document.getElementById('filtro-quartos').value;
   const banheiros = document.getElementById('filtro-banheiros').value;
+  const cidade = document.getElementById('filtro-cidade').value;
   const precoMax = document.getElementById('filtro-preco').value;
   if (tipo) parametros.set('tipo', tipo);
   if (quartos) parametros.set('quartos', quartos);
   if (banheiros) parametros.set('banheiros', banheiros);
+  if (cidade) parametros.set('cidade', cidade);
   if (precoMax) parametros.set('precoMax', precoMax);
 
   const imoveis = await Api.get(`/imoveis?${parametros.toString()}`);

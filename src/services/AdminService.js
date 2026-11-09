@@ -18,7 +18,11 @@ class AdminService {
   }
 
   listarTodosImoveis() {
-    return imovelRepository.findAll();
+    const imoveis = imovelRepository.findAll();
+    return imoveis.map((imovel) => {
+      const corretor = usuarioRepository.findOne((u) => u.id === imovel.corretorId);
+      return { ...imovel, corretorNome: corretor ? corretor.nome : `Corretor #${imovel.corretorId}` };
+    });
   }
 
   gerarRelatorio() {

@@ -16,8 +16,11 @@ document.querySelectorAll('.tab-btn').forEach((botao) => {
   });
 });
 
+let ultimoRelatorio = null;
+
 async function carregarRelatorio() {
   const relatorio = await Api.get('/admin/relatorio');
+  ultimoRelatorio = relatorio;
   document.getElementById('stat-grid').innerHTML = `
     <div class="stat-card"><div class="valor">${relatorio.totalImoveis}</div><div class="label">Imóveis cadastrados</div></div>
     <div class="stat-card"><div class="valor">${relatorio.imoveisVendidos}</div><div class="label">Imóveis vendidos</div></div>
@@ -29,6 +32,30 @@ async function carregarRelatorio() {
     <tr><td>${c.nome}</td><td>${c.totalVendas}</td></tr>
   `).join('') || '<tr><td colspan="2" class="empty-state">Nenhum corretor cadastrado.</td></tr>';
 }
+
+document.getElementById('btn-exportar-relatorio').addEventListener('click', () => {
+  if (!ultimoRelatorio) return;
+  const linhas = [
+    ['Indicador', 'Valor'],
+    ['Imoveis cadastrados', ultimoRelatorio.totalImoveis],
+    ['Imoveis disponiveis', ultimoRelatorio.imoveisDisponiveis],
+    ['Imoveis vendidos', ultimoRelatorio.imoveisVendidos],
+    ['Total de agendamentos', ultimoRelatorio.totalAgendamentos],
+    ['Visitas realizadas', ultimoRelatorio.visitasRealizadas],
+    ['Ticket medio', ultimoRelatorio.ticketMedio.toFixed(2)],
+    ['Taxa de conversao (%)', ultimoRelatorio.taxaConversaoPercentual.toFixed(1)],
+    [],
+    ['Corretor', 'Vendas realizadas'],
+    ...ultimoRelatorio.corretores.map((c) => [c.nome, c.totalVendas]),
+  ];
+  const csv = linhas.map((linha) => linha.join(';')).join('\n');
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = `relatorio-lunar-intel-${new Date().toISOString().slice(0, 10)}.csv`;
+  link.click();
+  URL.revokeObjectURL(link.href);
+});
 
 async function carregarUsuarios() {
   const usuarios = await Api.get('/admin/usuarios');
@@ -61,7 +88,7 @@ async function carregarImoveis() {
       <td>${i.tipo}</td>
       <td>${formatarMoeda(i.preco)}</td>
       <td><span class="pill pill-${i.status.toLowerCase()}">${i.status}</span></td>
-      <td>#${i.corretorId}</td>
+      <td>${i.corretorNome}</td>
     </tr>
   `).join('') || '<tr><td colspan="5" class="empty-state">Nenhum imóvel cadastrado.</td></tr>';
 }

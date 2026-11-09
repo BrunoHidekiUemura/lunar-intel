@@ -1,4 +1,5 @@
 let mapaImoveisAtual = {};
+let portfolioCompleto = [];
 
 document.addEventListener('usuario-pronto', async (evento) => {
   const usuario = evento.detail;
@@ -28,8 +29,13 @@ document.querySelectorAll('.tab-btn').forEach((botao) => {
 
 async function carregarPortfolio() {
   const imoveis = await Api.get('/imoveis/meu-portfolio');
+  portfolioCompleto = imoveis;
   imoveis.forEach((imovel) => { mapaImoveisAtual[imovel.id] = imovel; });
+  renderizarGridPortfolio(imoveis);
+  return imoveis;
+}
 
+function renderizarGridPortfolio(imoveis) {
   const grid = document.getElementById('grid-portfolio');
   grid.innerHTML = imoveis.map((imovel) => `
     <div class="card" data-id="${imovel.id}">
@@ -50,11 +56,34 @@ async function carregarPortfolio() {
         </div>
       </div>
     </div>
-  `).join('') || '<p class="empty-state">Você ainda não cadastrou nenhum imóvel.</p>';
+  `).join('') || '<p class="empty-state">Nenhum imóvel encontrado.</p>';
 
   ativarBotoesPortfolio(grid);
-  return imoveis;
 }
+
+function aplicarFiltroPortfolio() {
+  const busca = document.getElementById('portfolio-busca').value.trim().toLowerCase();
+  const status = document.getElementById('portfolio-status').value;
+  const ordenar = document.getElementById('portfolio-ordenar').value;
+
+  let filtrados = portfolioCompleto.filter((imovel) => {
+    if (status && imovel.status !== status) return false;
+    if (busca) {
+      const alvo = `${imovel.titulo} ${imovel.endereco?.bairro || ''}`.toLowerCase();
+      if (!alvo.includes(busca)) return false;
+    }
+    return true;
+  });
+
+  if (ordenar === 'preco-asc') filtrados = filtrados.slice().sort((a, b) => a.preco - b.preco);
+  else if (ordenar === 'preco-desc') filtrados = filtrados.slice().sort((a, b) => b.preco - a.preco);
+  else filtrados = filtrados.slice().sort((a, b) => a.titulo.localeCompare(b.titulo));
+
+  renderizarGridPortfolio(filtrados);
+}
+document.getElementById('portfolio-busca').addEventListener('input', aplicarFiltroPortfolio);
+document.getElementById('portfolio-status').addEventListener('change', aplicarFiltroPortfolio);
+document.getElementById('portfolio-ordenar').addEventListener('change', aplicarFiltroPortfolio);
 
 function botoesAcaoImovel(imovel) {
   return `
@@ -256,6 +285,7 @@ async function carregarSolicitacoes() {
   const corpo = document.getElementById('tabela-solicitacoes');
   corpo.innerHTML = agendamentos.map((a) => `
     <tr>
+      <td>${a.cliente?.nome || `Cliente #${a.clienteId}`}<br><small style="color:var(--text-dim);">${a.cliente?.telefone || ''}</small></td>
       <td>${mapaImoveis[a.imovelId]?.titulo || `Imóvel #${a.imovelId}`}</td>
       <td>${formatarData(a.dataVisita)}</td>
       <td><span class="pill pill-${a.status.toLowerCase()}">${a.status}</span></td>
@@ -267,7 +297,7 @@ async function carregarSolicitacoes() {
           <button class="btn btn-small btn-danger btn-cancelar" data-id="${a.id}">Cancelar</button>` : ''}
       </td>
     </tr>
-  `).join('') || '<tr><td colspan="4" class="empty-state">Nenhuma solicitação recebida ainda.</td></tr>';
+  `).join('') || '<tr><td colspan="5" class="empty-state">Nenhuma solicitação recebida ainda.</td></tr>';
 
   corpo.querySelectorAll('.btn-confirmar').forEach((b) => b.addEventListener('click', async () => {
     await Api.put(`/agendamentos/${b.dataset.id}/confirmar`); carregarSolicitacoes();
@@ -318,4 +348,10 @@ document.getElementById('form-perfil').addEventListener('submit', async (evento)
   } catch (erro) {
     mostrarAlerta('alerta-perfil', erro.message);
   }
+});
+
+document.getElementById('btn-inativar').addEventListener('click', async () => {
+  if (!confirm('Tem certeza que deseja inativar sua conta?')) return;
+  await Api.post('/auth/inativar');
+  window.location.href = 'login.html';
 });

@@ -1,5 +1,6 @@
 const agendamentoRepository = require('../repositories/AgendamentoRepository');
 const imovelRepository = require('../repositories/ImovelRepository');
+const usuarioRepository = require('../repositories/UsuarioRepository');
 const notificacaoService = require('./NotificacaoService');
 const { ValidationError, ForbiddenError, BusinessRuleError, NotFoundError } = require('../errors/AppError');
 const { LIMITE_AGENDAMENTOS_ATIVOS, INTERVALO_MINIMO_DIAS, STATUS_AGENDAMENTO } = require('../config/constants');
@@ -108,7 +109,13 @@ class AgendamentoService {
   }
 
   listarPorCorretor(corretorId) {
-    return agendamentoRepository.findByCorretor(corretorId);
+    return agendamentoRepository.findByCorretor(corretorId).map((agendamento) => {
+      const cliente = usuarioRepository.findById(agendamento.clienteId);
+      return {
+        ...agendamento,
+        cliente: { nome: cliente.nome, telefone: cliente.telefone, email: cliente.email },
+      };
+    });
   }
 
   buscarPorId(agendamentoId) {
