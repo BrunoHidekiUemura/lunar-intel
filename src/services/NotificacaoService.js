@@ -2,7 +2,6 @@ const notificacaoRepository = require('../repositories/NotificacaoRepository');
 const { ForbiddenError } = require('../errors/AppError');
 
 class NotificacaoService {
-  /** RN10 - cria uma notificacao para um usuario (cliente ou corretor). */
   notificar(usuarioId, tipo, titulo, mensagem) {
     return notificacaoRepository.create({ usuarioId: Number(usuarioId), tipo, titulo, mensagem });
   }

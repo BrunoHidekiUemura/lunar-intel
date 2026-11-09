@@ -2,16 +2,10 @@ const fs = require('fs');
 const path = require('path');
 const { NotFoundError, PersistenceError } = require('../errors/AppError');
 
-/**
- * JsonRepository - persistencia generica baseada em arquivo JSON (RNF05).
- * Cada repositorio especifico (UsuarioRepository, ImovelRepository, ...)
- * estende esta classe informando o arquivo de dados e a factory que
- * reconstroi instancias da classe de dominio correspondente a partir do JSON puro.
- */
 class JsonRepository {
   constructor(nomeArquivo, factory) {
     this.caminho = path.join(__dirname, '..', '..', 'data', nomeArquivo);
-    this.factory = factory; // (objetoPlano) => instancia da classe de dominio
+    this.factory = factory;
     this._garantirArquivo();
   }
 
@@ -79,7 +73,6 @@ class JsonRepository {
     return atualizado;
   }
 
-  /** Persiste uma instancia ja modificada em memoria (usada apos chamar metodos de dominio). */
   salvarEntidade(entidade) {
     return this.update(entidade.id, entidade);
   }

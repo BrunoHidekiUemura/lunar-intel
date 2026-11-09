@@ -29,13 +29,10 @@
                     <input type="password" id="senha" required>
                 </div>
                 <button type="submit" class="btn btn-block">Entrar</button>
+                <button type="button" id="btn-recuperar" class="btn btn-secondary btn-block" style="margin-top:10px;">Esqueci minha senha</button>
             </form>
             <p style="margin-top:16px; font-size:13px; color:var(--text-dim); text-align:center;">
-                <a href="#" id="link-recuperar">Esqueci minha senha</a> &middot;
                 Não tem conta? <a href="cadastro.html" style="color:var(--primary);">Cadastre-se</a>
-            </p>
-            <p style="margin-top:14px; font-size:12px; color:var(--text-dim); text-align:center;">
-                Demo: admin@lunarintel.com / bruno@lunarintel.com / cliente@lunarintel.com (senha: 123456)
             </p>
         </div>
     </div>
@@ -57,8 +54,7 @@
             }
         });
 
-        document.getElementById('link-recuperar').addEventListener('click', async (evento) => {
-            evento.preventDefault();
+        document.getElementById('btn-recuperar').addEventListener('click', async () => {
             const email = document.getElementById('email').value;
             if (!email) { mostrarAlerta('alerta', 'Informe o e-mail para recuperar a senha.'); return; }
             try {

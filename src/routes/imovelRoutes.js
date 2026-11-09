@@ -6,40 +6,33 @@ const { PERFIS } = require('../config/constants');
 
 const router = express.Router();
 
-/** RF08/RF13/RF25 - catalogo com filtros (publico para qualquer usuario autenticado). */
 router.get('/', requireAuth, asyncHandler(async (req, res) => {
   res.json(imovelService.listarDisponiveis(req.query));
 }));
 
-/** F20/RF20 - portfolio do corretor logado (precisa vir antes de "/:id"). */
 router.get('/meu-portfolio', requireAuth, requireRole(PERFIS.CORRETOR), asyncHandler(async (req, res) => {
   res.json(imovelService.listarPorCorretor(req.session.usuarioId));
 }));
 
-/** RF09 */
 router.get('/:id', requireAuth, asyncHandler(async (req, res) => {
   res.json(imovelService.buscarPorId(req.params.id).getDadosCompletos());
 }));
 
-/** RF17/F14 */
 router.post('/', requireAuth, requireRole(PERFIS.CORRETOR), asyncHandler(async (req, res) => {
   const imovel = imovelService.cadastrar(req.session.usuarioId, req.body);
   res.status(201).json(imovel);
 }));
 
-/** RF18/F15 */
 router.put('/:id', requireAuth, requireRole(PERFIS.CORRETOR), asyncHandler(async (req, res) => {
   const imovel = imovelService.atualizar(req.session.usuarioId, req.params.id, req.body);
   res.json(imovel);
 }));
 
-/** RF19/F16 */
 router.delete('/:id', requireAuth, requireRole(PERFIS.CORRETOR), asyncHandler(async (req, res) => {
   const imovel = imovelService.inativar(req.session.usuarioId, req.params.id);
   res.json(imovel);
 }));
 
-/** RF24/F21/RF21 */
 router.post('/:id/vender', requireAuth, requireRole(PERFIS.CORRETOR), asyncHandler(async (req, res) => {
   const imovel = imovelService.marcarComoVendido(req.session.usuarioId, req.params.id, req.body.valorVenda);
   res.json(imovel);

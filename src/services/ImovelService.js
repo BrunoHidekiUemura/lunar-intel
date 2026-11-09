@@ -6,7 +6,6 @@ const { ValidationError, ForbiddenError, BusinessRuleError } = require('../error
 const { STATUS_IMOVEL, STATUS_AGENDAMENTO } = require('../config/constants');
 
 class ImovelService {
-  /** RF08/RF13/RF25 - catalogo publico com filtros, sempre excluindo inativos/vendidos (RN12). */
   listarDisponiveis({ tipo, quartos, banheiros, cidade, precoMax } = {}) {
     return imovelRepository.findMany((imovel) => {
       if (imovel.status !== STATUS_IMOVEL.DISPONIVEL) return false;
@@ -19,12 +18,10 @@ class ImovelService {
     });
   }
 
-  /** RF09 */
   buscarPorId(id) {
     return imovelRepository.findById(id);
   }
 
-  /** RF17/F14 - cadastro de imovel pelo corretor. */
   cadastrar(corretorId, dados) {
     if (!dados.titulo || !dados.preco || !dados.endereco) {
       throw new ValidationError('Titulo, preco e endereco sao obrigatorios.');
@@ -35,21 +32,18 @@ class ImovelService {
     return imovelRepository.create({ ...dados, corretorId: Number(corretorId), status: STATUS_IMOVEL.DISPONIVEL });
   }
 
-  /** Garante a RN06 - isolamento: somente o corretor titular altera/remove seu imovel. */
   _verificarTitularidade(imovel, corretorId) {
     if (imovel.corretorId !== Number(corretorId)) {
-      throw new ForbiddenError('Voce so pode alterar imoveis do seu proprio portfolio (RN06).');
+      throw new ForbiddenError('Voce so pode alterar imoveis do seu proprio portfolio.');
     }
   }
 
-  /** RF18/F15 */
   atualizar(corretorId, imovelId, dados) {
     const imovel = imovelRepository.findById(imovelId);
     this._verificarTitularidade(imovel, corretorId);
     return imovelRepository.update(imovelId, dados);
   }
 
-  /** RF19/F16 */
   inativar(corretorId, imovelId) {
     const imovel = imovelRepository.findById(imovelId);
     this._verificarTitularidade(imovel, corretorId);
@@ -57,7 +51,6 @@ class ImovelService {
     return imovelRepository.salvarEntidade(imovel);
   }
 
-  /** RF24/F21/RF21 - RN02: so pode ser vendido se nao houver visitas em aberto. */
   marcarComoVendido(corretorId, imovelId, valorVenda) {
     const imovel = imovelRepository.findById(imovelId);
     this._verificarTitularidade(imovel, corretorId);
@@ -68,7 +61,7 @@ class ImovelService {
     );
     if (temVisitaEmAberto) {
       throw new BusinessRuleError(
-        'Nao e possivel concluir a venda: existem visitas pendentes ou confirmadas para este imovel (RN02).',
+        'Nao e possivel concluir a venda: existem visitas pendentes ou confirmadas para este imovel.',
       );
     }
 

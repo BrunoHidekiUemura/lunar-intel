@@ -5,12 +5,10 @@ const { NotFoundError } = require('../errors/AppError');
 const { PERFIS, STATUS_IMOVEL, STATUS_AGENDAMENTO } = require('../config/constants');
 
 class AdminService {
-  /** RF26/F23 */
   listarUsuarios() {
     return usuarioRepository.findAll();
   }
 
-  /** RF27/F25 - ativa ou bloqueia a conta de um usuario (tipicamente corretores). */
   alterarStatusUsuario(usuarioId, ativo) {
     const usuario = usuarioRepository.findById(usuarioId);
     if (!usuario) throw new NotFoundError('Usuario nao encontrado.');
@@ -19,12 +17,10 @@ class AdminService {
     return usuarioRepository.salvarEntidade(usuario);
   }
 
-  /** RF29/F26 - visao global de imoveis, sem o filtro de disponibilidade do catalogo publico. */
   listarTodosImoveis() {
     return imovelRepository.findAll();
   }
 
-  /** RF28/F24/RF30/F27 - relatorio consolidado de vendas, visitas e conversao. */
   gerarRelatorio() {
     const imoveis = imovelRepository.findAll();
     const agendamentos = agendamentoRepository.findAll();

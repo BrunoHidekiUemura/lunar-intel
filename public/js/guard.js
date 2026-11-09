@@ -1,8 +1,3 @@
-/**
- * Protege as paginas de dashboard: confirma autenticacao e perfil correto,
- * monta a navbar comum e expoe window.usuarioAtual para os scripts de cada pagina.
- * Uso: <script src="js/guard.js" data-perfil="CLIENTE"></script>
- */
 (async function iniciarGuard() {
   const scriptAtual = document.currentScript;
   const perfilEsperado = scriptAtual.dataset.perfil;
@@ -28,7 +23,7 @@ function montarNavbar(usuario) {
   nav.innerHTML = `
     <div class="logo">LU<span>NAR</span> INTEL</div>
     <div class="nav-links">
-      <span class="badge-perfil">${usuario.nome} &middot; ${usuario.tipo}</span>
+      <span class="badge-perfil">${usuario.resumoPerfil}</span>
       <button id="btn-logout">Sair</button>
     </div>
   `;

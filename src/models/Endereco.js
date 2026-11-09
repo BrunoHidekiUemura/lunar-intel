@@ -1,10 +1,5 @@
-// RN implicito de qualidade de dados: CEP brasileiro com 8 digitos (com ou sem hifen)
 const REGEX_CEP = /^\d{5}-?\d{3}$/;
 
-/**
- * Endereco - classe de composicao: cada Imovel possui exatamente um Endereco
- * (relacionamento 1:1, ver Atividade 4).
- */
 class Endereco {
   constructor({ logradouro, numero, complemento, bairro, cidade, estado, cep }) {
     this.logradouro = logradouro;

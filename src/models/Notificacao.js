@@ -1,7 +1,3 @@
-/**
- * Notificacao - evento relevante destinado a um Usuario (RN10).
- * Tipos: AGENDAMENTO, IMOVEL_NOVO, SISTEMA.
- */
 class Notificacao {
   constructor({ id, usuarioId, tipo, titulo, mensagem, lida, dataEnvio }) {
     this.id = id;

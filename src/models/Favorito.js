@@ -1,6 +1,3 @@
-/**
- * Favorito - entidade associativa entre Cliente e Imovel (RF14/RF15).
- */
 class Favorito {
   constructor({ id, clienteId, imovelId, dataAdicao }) {
     this.id = id;

@@ -6,21 +6,17 @@ const { PERFIS } = require('../config/constants');
 
 const router = express.Router();
 
-/** RF10 - cliente solicita visita. */
 router.post('/', requireAuth, requireRole(PERFIS.CLIENTE), asyncHandler(async (req, res) => {
   const agendamento = agendamentoService.solicitar(req.session.usuarioId, req.body);
   res.status(201).json(agendamento);
 }));
 
-/** RF12/F08 e F18/RF21 - lista conforme o perfil logado. */
-router.get('/', requireAuth, asyncHandler(async (req, res) => {
+router.get('/', requireAuth, requireRole(PERFIS.CLIENTE, PERFIS.CORRETOR), asyncHandler(async (req, res) => {
   const { usuarioId, tipo } = req.session;
   if (tipo === PERFIS.CLIENTE) return res.json(agendamentoService.listarPorCliente(usuarioId));
-  if (tipo === PERFIS.CORRETOR) return res.json(agendamentoService.listarPorCorretor(usuarioId));
-  return res.json([]);
+  return res.json(agendamentoService.listarPorCorretor(usuarioId));
 }));
 
-/** RF19/F19/F22 */
 router.put('/:id/confirmar', requireAuth, requireRole(PERFIS.CORRETOR), asyncHandler(async (req, res) => {
   res.json(agendamentoService.confirmar(req.session.usuarioId, req.params.id));
 }));

@@ -4,7 +4,6 @@ const Corretor = require('../models/Corretor');
 const Administrador = require('../models/Administrador');
 const { PERFIS } = require('../config/constants');
 
-/** Reconstroi a subclasse correta de Usuario a partir do campo discriminador "tipo". */
 function fabricaUsuario(dados) {
   switch (dados.tipo) {
     case PERFIS.CLIENTE:

@@ -4,13 +4,11 @@ const imovelService = require('./ImovelService');
 const { ValidationError } = require('../errors/AppError');
 
 class SimulacaoService {
-  /** RF07/RF08 - executa a simulacao de financiamento e retorna os imoveis compativeis. */
   simular(clienteId, { rendaMensal, idade, poupanca, fgts }) {
     if (!rendaMensal || !idade) {
       throw new ValidationError('Renda mensal e idade sao obrigatorias para a simulacao.');
     }
 
-    // Atualiza o perfil financeiro do cliente com os dados mais recentes informados (RF06)
     const cliente = usuarioRepository.update(clienteId, {
       rendaMensal: Number(rendaMensal),
       idade: Number(idade),
@@ -38,7 +36,6 @@ class SimulacaoService {
     return { simulacao: simulacaoAtualizada, imoveisCompativeis };
   }
 
-  /** RF11 - historico de simulacoes do cliente. */
   listarPorCliente(clienteId) {
     return simulacaoRepository.findByCliente(clienteId)
       .sort((a, b) => new Date(b.dataSimulacao) - new Date(a.dataSimulacao));

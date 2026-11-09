@@ -7,7 +7,6 @@ const router = express.Router();
 
 router.use(requireAuth);
 
-/** RF12/RN10 */
 router.get('/', asyncHandler(async (req, res) => {
   res.json(notificacaoService.listarPorUsuario(req.session.usuarioId));
 }));

@@ -22,7 +22,6 @@
             <button class="tab-btn" data-tab="perfil">Perfil</button>
         </div>
 
-        <!-- RF07/RF08 - Simulação -->
         <section id="tab-simulacao" class="tab-content active">
             <div class="panel">
                 <h2><i class="fa-solid fa-calculator"></i> Simular financiamento</h2>
@@ -68,7 +67,6 @@
             </div>
         </section>
 
-        <!-- RF08/RF13 - Catálogo -->
         <section id="tab-catalogo" class="tab-content">
             <div class="panel">
                 <h2><i class="fa-solid fa-house-chimney"></i> Catálogo de imóveis</h2>
@@ -85,13 +83,11 @@
             <div class="property-grid" id="grid-catalogo" style="margin-top:20px;"></div>
         </section>
 
-        <!-- RF14/RF15 - Favoritos -->
         <section id="tab-favoritos" class="tab-content">
             <div class="panel"><h2><i class="fa-solid fa-heart"></i> Imóveis favoritos</h2></div>
             <div class="property-grid" id="grid-favoritos" style="margin-top:20px;"></div>
         </section>
 
-        <!-- RF10/RF12 - Visitas -->
         <section id="tab-visitas" class="tab-content">
             <div class="panel">
                 <h2><i class="fa-solid fa-calendar-check"></i> Minhas visitas</h2>
@@ -104,7 +100,6 @@
             </div>
         </section>
 
-        <!-- Notificações -->
         <section id="tab-notificacoes" class="tab-content">
             <div class="panel">
                 <h2><i class="fa-solid fa-bell"></i> Notificações</h2>
@@ -112,7 +107,6 @@
             </div>
         </section>
 
-        <!-- RF04/RF05 - Perfil -->
         <section id="tab-perfil" class="tab-content">
             <div class="panel">
                 <h2><i class="fa-solid fa-user"></i> Meus dados</h2>
@@ -127,13 +121,32 @@
             </div>
             <div class="panel">
                 <h2>Encerrar conta</h2>
-                <p style="color:var(--text-dim); margin-bottom:16px;">Esta ação inativa sua conta (RF05). Você poderá voltar a usar o sistema entrando em contato com a administração.</p>
+                <p style="color:var(--text-dim); margin-bottom:16px;">Esta ação inativa sua conta. Você poderá voltar a usar o sistema entrando em contato com a administração.</p>
                 <button class="btn btn-danger" id="btn-inativar">Inativar minha conta</button>
             </div>
         </section>
     </div>
 
-    <!-- RF10 - Modal de agendamento de visita -->
+    <div class="modal-overlay" id="modal-detalhe-imovel">
+        <div class="modal-box modal-box-wide">
+            <button type="button" class="btn-fechar-detalhe" id="btn-fechar-detalhe">&times;</button>
+            <div class="carrossel">
+                <button type="button" class="carrossel-seta carrossel-anterior" id="carrossel-anterior"><i class="fa-solid fa-chevron-left"></i></button>
+                <div class="carrossel-img" id="carrossel-img"></div>
+                <button type="button" class="carrossel-seta carrossel-proxima" id="carrossel-proxima"><i class="fa-solid fa-chevron-right"></i></button>
+                <div class="carrossel-dots" id="carrossel-dots"></div>
+            </div>
+            <div class="detalhe-corpo">
+                <h2 id="detalhe-titulo"></h2>
+                <div class="card-price" id="detalhe-preco"></div>
+                <p id="detalhe-endereco" style="color:var(--text-dim); margin-bottom:14px;"></p>
+                <div class="card-features" id="detalhe-features"></div>
+                <p id="detalhe-descricao" style="margin-top:16px; color:var(--text-dim);"></p>
+                <div class="card-actions" id="detalhe-acoes" style="margin-top:20px;"></div>
+            </div>
+        </div>
+    </div>
+
     <div class="modal-overlay" id="modal-agendamento">
         <div class="modal-box">
             <h3>Agendar visita</h3>

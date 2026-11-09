@@ -20,7 +20,9 @@
     },
     "corretorId": 2,
     "imagens": [
-      "https://picsum.photos/seed/lunarintel0/600/400"
+      "https://picsum.photos/seed/lunarintel0-0/800/500",
+      "https://picsum.photos/seed/lunarintel0-1/800/500",
+      "https://picsum.photos/seed/lunarintel0-2/800/500"
     ]
   },
   {
@@ -44,7 +46,9 @@
     },
     "corretorId": 2,
     "imagens": [
-      "https://picsum.photos/seed/lunarintel1/600/400"
+      "https://picsum.photos/seed/lunarintel1-0/800/500",
+      "https://picsum.photos/seed/lunarintel1-1/800/500",
+      "https://picsum.photos/seed/lunarintel1-2/800/500"
     ]
   },
   {
@@ -68,7 +72,9 @@
     },
     "corretorId": 2,
     "imagens": [
-      "https://picsum.photos/seed/lunarintel2/600/400"
+      "https://picsum.photos/seed/lunarintel2-0/800/500",
+      "https://picsum.photos/seed/lunarintel2-1/800/500",
+      "https://picsum.photos/seed/lunarintel2-2/800/500"
     ]
   },
   {
@@ -92,7 +98,9 @@
     },
     "corretorId": 2,
     "imagens": [
-      "https://picsum.photos/seed/lunarintel3/600/400"
+      "https://picsum.photos/seed/lunarintel3-0/800/500",
+      "https://picsum.photos/seed/lunarintel3-1/800/500",
+      "https://picsum.photos/seed/lunarintel3-2/800/500"
     ]
   },
   {
@@ -116,7 +124,9 @@
     },
     "corretorId": 3,
     "imagens": [
-      "https://picsum.photos/seed/lunarintel4/600/400"
+      "https://picsum.photos/seed/lunarintel4-0/800/500",
+      "https://picsum.photos/seed/lunarintel4-1/800/500",
+      "https://picsum.photos/seed/lunarintel4-2/800/500"
     ]
   },
   {
@@ -140,7 +150,9 @@
     },
     "corretorId": 3,
     "imagens": [
-      "https://picsum.photos/seed/lunarintel5/600/400"
+      "https://picsum.photos/seed/lunarintel5-0/800/500",
+      "https://picsum.photos/seed/lunarintel5-1/800/500",
+      "https://picsum.photos/seed/lunarintel5-2/800/500"
     ]
   },
   {
@@ -164,7 +176,9 @@
     },
     "corretorId": 3,
     "imagens": [
-      "https://picsum.photos/seed/lunarintel6/600/400"
+      "https://picsum.photos/seed/lunarintel6-0/800/500",
+      "https://picsum.photos/seed/lunarintel6-1/800/500",
+      "https://picsum.photos/seed/lunarintel6-2/800/500"
     ]
   },
   {
@@ -188,7 +202,9 @@
     },
     "corretorId": 3,
     "imagens": [
-      "https://picsum.photos/seed/lunarintel7/600/400"
+      "https://picsum.photos/seed/lunarintel7-0/800/500",
+      "https://picsum.photos/seed/lunarintel7-1/800/500",
+      "https://picsum.photos/seed/lunarintel7-2/800/500"
     ]
   },
   {
@@ -212,7 +228,9 @@
     },
     "corretorId": 2,
     "imagens": [
-      "https://picsum.photos/seed/lunarintel8/600/400"
+      "https://picsum.photos/seed/lunarintel8-0/800/500",
+      "https://picsum.photos/seed/lunarintel8-1/800/500",
+      "https://picsum.photos/seed/lunarintel8-2/800/500"
     ]
   },
   {
@@ -236,7 +254,9 @@
     },
     "corretorId": 3,
     "imagens": [
-      "https://picsum.photos/seed/lunarintel9/600/400"
+      "https://picsum.photos/seed/lunarintel9-0/800/500",
+      "https://picsum.photos/seed/lunarintel9-1/800/500",
+      "https://picsum.photos/seed/lunarintel9-2/800/500"
     ]
   }
 ]

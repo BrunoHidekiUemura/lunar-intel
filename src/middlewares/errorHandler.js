@@ -1,10 +1,6 @@
 const { AppError } = require('../errors/AppError');
 
-/**
- * Tratamento centralizado de excecoes (RNF06): sempre responde com uma
- * mensagem amigavel, nunca com o stack trace ou detalhes internos.
- */
-function errorHandler(erro, req, res, next) { // eslint-disable-line no-unused-vars
+function errorHandler(erro, req, res, next) {
   if (erro instanceof AppError) {
     return res.status(erro.status).json({ erro: erro.message });
   }

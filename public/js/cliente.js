@@ -1,6 +1,5 @@
-// Logica da pagina do Cliente: tabs, simulacao, catalogo, favoritos, visitas, notificacoes e perfil.
-
 let favoritosIds = new Set();
+let mapaImoveisAtual = {};
 
 document.addEventListener('usuario-pronto', (evento) => {
   const usuario = evento.detail;
@@ -17,7 +16,6 @@ document.addEventListener('usuario-pronto', (evento) => {
   carregarNotificacoes();
 });
 
-// --- TABS ---
 document.querySelectorAll('.tab-btn').forEach((botao) => {
   botao.addEventListener('click', () => {
     document.querySelectorAll('.tab-btn').forEach((b) => b.classList.remove('active'));
@@ -28,7 +26,6 @@ document.querySelectorAll('.tab-btn').forEach((botao) => {
   });
 });
 
-// --- SIMULACAO (RF07/RF08) ---
 document.getElementById('form-simulacao').addEventListener('submit', async (evento) => {
   evento.preventDefault();
   try {
@@ -61,7 +58,6 @@ async function carregarHistoricoSimulacoes() {
   `).join('') || '<tr><td colspan="4" class="empty-state">Nenhuma simulação realizada ainda.</td></tr>';
 }
 
-// --- CATALOGO (RF08/RF13) ---
 document.getElementById('btn-filtrar').addEventListener('click', carregarCatalogo);
 
 async function carregarCatalogo() {
@@ -79,31 +75,36 @@ async function carregarCatalogo() {
   renderizarImoveis('grid-catalogo', imoveis);
 }
 
-// --- FAVORITOS (RF14/RF15) ---
 async function carregarFavoritos() {
   const favoritos = await Api.get('/favoritos');
   favoritosIds = new Set(favoritos.map((f) => f.imovel.id));
+  atualizarMapaImoveis(favoritos.map((f) => f.imovel));
   const grid = document.getElementById('grid-favoritos');
   grid.innerHTML = favoritos.map((f) => cartaoImovel(f.imovel, f.favorito.id)).join('')
     || '<p class="empty-state">Você ainda não favoritou nenhum imóvel.</p>';
   ativarBotoesImovel();
 }
 
-// --- RENDERIZACAO COMPARTILHADA DE IMOVEIS ---
 function renderizarImoveis(idGrid, imoveis) {
+  atualizarMapaImoveis(imoveis);
   const grid = document.getElementById(idGrid);
   grid.innerHTML = imoveis.map((i) => cartaoImovel(i)).join('')
     || '<p class="empty-state">Nenhum imóvel encontrado para este filtro/perfil financeiro.</p>';
   ativarBotoesImovel();
 }
 
+function atualizarMapaImoveis(imoveis) {
+  imoveis.forEach((imovel) => { mapaImoveisAtual[imovel.id] = imovel; });
+}
+
 function cartaoImovel(imovel, favoritoId) {
   const imagem = (imovel.imagens && imovel.imagens[0]) || 'https://placehold.co/600x400?text=LUNAR+INTEL';
   const jaFavoritado = favoritosIds.has(imovel.id) || favoritoId;
   return `
-    <div class="card">
+    <div class="card" data-id="${imovel.id}">
       <div class="card-img" style="background-image:url('${imagem}')">
         <div class="status-tag">${imovel.tipo}</div>
+        ${imovel.imagens && imovel.imagens.length > 1 ? `<div class="status-tag" style="left:auto; right:12px; background:rgba(0,0,0,0.6); color:#fff;"><i class="fa-solid fa-images"></i> ${imovel.imagens.length}</div>` : ''}
       </div>
       <div class="card-body">
         <h3>${imovel.titulo}</h3>
@@ -126,6 +127,88 @@ function cartaoImovel(imovel, favoritoId) {
     </div>
   `;
 }
+
+['grid-catalogo', 'grid-favoritos', 'grid-simulacao'].forEach((idGrid) => {
+  document.getElementById(idGrid).addEventListener('click', (evento) => {
+    if (evento.target.closest('.card-actions')) return;
+    const card = evento.target.closest('.card');
+    if (!card) return;
+    abrirDetalheImovel(mapaImoveisAtual[Number(card.dataset.id)]);
+  });
+});
+
+let carrosselImagens = [];
+let carrosselIndice = 0;
+
+function abrirDetalheImovel(imovel) {
+  if (!imovel) return;
+  carrosselImagens = (imovel.imagens && imovel.imagens.length)
+    ? imovel.imagens
+    : ['https://placehold.co/800x500?text=LUNAR+INTEL'];
+  carrosselIndice = 0;
+  renderizarCarrossel();
+
+  document.getElementById('detalhe-titulo').textContent = imovel.titulo;
+  document.getElementById('detalhe-preco').textContent = formatarMoeda(imovel.preco);
+  document.getElementById('detalhe-endereco').textContent =
+    `${imovel.endereco.logradouro}, ${imovel.endereco.numero} - ${imovel.endereco.bairro}, ${imovel.endereco.cidade}/${imovel.endereco.estado}`;
+  document.getElementById('detalhe-features').innerHTML = `
+    <span><i class="fa-solid fa-bed"></i> ${imovel.quartos} quartos</span>
+    <span><i class="fa-solid fa-bath"></i> ${imovel.banheiros} banheiros</span>
+    <span><i class="fa-solid fa-ruler-combined"></i> ${imovel.areaTotal} m²</span>
+    <span><i class="fa-solid fa-tag"></i> ${imovel.tipo}</span>
+  `;
+  document.getElementById('detalhe-descricao').textContent = imovel.descricao || '';
+
+  const jaFavoritado = favoritosIds.has(imovel.id);
+  document.getElementById('detalhe-acoes').innerHTML = `
+    <button class="btn btn-agendar-detalhe">Agendar visita</button>
+    <button class="btn btn-secondary btn-favoritar-detalhe" ${jaFavoritado ? 'disabled' : ''}>${jaFavoritado ? 'Favoritado' : 'Favoritar'}</button>
+  `;
+  document.querySelector('.btn-agendar-detalhe').addEventListener('click', () => {
+    document.getElementById('modal-detalhe-imovel').classList.remove('active');
+    abrirModalAgendamento(imovel.id);
+  });
+  document.querySelector('.btn-favoritar-detalhe').addEventListener('click', async (evento) => {
+    try {
+      await Api.post('/favoritos', { imovelId: imovel.id });
+      await carregarFavoritos();
+      evento.target.disabled = true;
+      evento.target.textContent = 'Favoritado';
+    } catch (erro) { alert(erro.message); }
+  });
+
+  document.getElementById('modal-detalhe-imovel').classList.add('active');
+}
+
+document.getElementById('btn-fechar-detalhe').addEventListener('click', () => {
+  document.getElementById('modal-detalhe-imovel').classList.remove('active');
+});
+
+function renderizarCarrossel() {
+  document.getElementById('carrossel-img').style.backgroundImage = `url('${carrosselImagens[carrosselIndice]}')`;
+
+  const temVarias = carrosselImagens.length > 1;
+  document.getElementById('carrossel-anterior').style.display = temVarias ? 'flex' : 'none';
+  document.getElementById('carrossel-proxima').style.display = temVarias ? 'flex' : 'none';
+
+  const dots = document.getElementById('carrossel-dots');
+  dots.innerHTML = temVarias
+    ? carrosselImagens.map((_, i) => `<span class="dot ${i === carrosselIndice ? 'active' : ''}" data-i="${i}"></span>`).join('')
+    : '';
+  dots.querySelectorAll('.dot').forEach((dot) => {
+    dot.addEventListener('click', () => { carrosselIndice = Number(dot.dataset.i); renderizarCarrossel(); });
+  });
+}
+
+document.getElementById('carrossel-anterior').addEventListener('click', () => {
+  carrosselIndice = (carrosselIndice - 1 + carrosselImagens.length) % carrosselImagens.length;
+  renderizarCarrossel();
+});
+document.getElementById('carrossel-proxima').addEventListener('click', () => {
+  carrosselIndice = (carrosselIndice + 1) % carrosselImagens.length;
+  renderizarCarrossel();
+});
 
 function ativarBotoesImovel() {
   document.querySelectorAll('.btn-agendar').forEach((botao) => {
@@ -150,7 +233,6 @@ function ativarBotoesImovel() {
   });
 }
 
-// --- MODAL DE AGENDAMENTO (RF10) ---
 function abrirModalAgendamento(imovelId) {
   document.getElementById('agendar-imovel-id').value = imovelId;
   document.getElementById('alerta-agendamento').innerHTML = '';
@@ -175,10 +257,9 @@ document.getElementById('form-agendamento').addEventListener('submit', async (ev
   }
 });
 
-// --- VISITAS (RF12) ---
 async function carregarVisitas() {
   const visitas = await Api.get('/agendamentos');
-  const imoveis = await Api.get('/imoveis'); // catalogo disponivel; suficiente para exibir o titulo
+  const imoveis = await Api.get('/imoveis');
   const mapaImoveis = {};
   imoveis.forEach((i) => { mapaImoveis[i.id] = i; });
 
@@ -193,7 +274,6 @@ async function carregarVisitas() {
   `).join('') || '<tr><td colspan="4" class="empty-state">Nenhuma visita solicitada ainda.</td></tr>';
 }
 
-// --- NOTIFICACOES ---
 async function carregarNotificacoes() {
   const notificacoes = await Api.get('/notificacoes');
   const lista = document.getElementById('lista-notificacoes');
@@ -213,7 +293,6 @@ async function carregarNotificacoes() {
   });
 }
 
-// --- PERFIL (RF04/RF05) ---
 document.getElementById('form-perfil').addEventListener('submit', async (evento) => {
   evento.preventDefault();
   try {

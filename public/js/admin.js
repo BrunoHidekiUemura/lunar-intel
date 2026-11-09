@@ -1,5 +1,3 @@
-// Logica da pagina do Administrador: usuarios, imoveis, relatorio e perfil.
-
 document.addEventListener('usuario-pronto', (evento) => {
   const usuario = evento.detail;
   document.getElementById('perfil-nome').value = usuario.nome;
@@ -18,7 +16,6 @@ document.querySelectorAll('.tab-btn').forEach((botao) => {
   });
 });
 
-// --- RELATORIO (RF28/F24, RF30/F27) ---
 async function carregarRelatorio() {
   const relatorio = await Api.get('/admin/relatorio');
   document.getElementById('stat-grid').innerHTML = `
@@ -33,7 +30,6 @@ async function carregarRelatorio() {
   `).join('') || '<tr><td colspan="2" class="empty-state">Nenhum corretor cadastrado.</td></tr>';
 }
 
-// --- USUARIOS (RF26/F23, RF27/F25) ---
 async function carregarUsuarios() {
   const usuarios = await Api.get('/admin/usuarios');
   document.getElementById('tabela-usuarios').innerHTML = usuarios.map((u) => `
@@ -57,7 +53,6 @@ async function carregarUsuarios() {
   });
 }
 
-// --- IMOVEIS (RF29/F26) ---
 async function carregarImoveis() {
   const imoveis = await Api.get('/admin/imoveis');
   document.getElementById('tabela-imoveis').innerHTML = imoveis.map((i) => `
@@ -71,7 +66,6 @@ async function carregarImoveis() {
   `).join('') || '<tr><td colspan="5" class="empty-state">Nenhum imóvel cadastrado.</td></tr>';
 }
 
-// --- PERFIL ---
 document.getElementById('form-perfil').addEventListener('submit', async (evento) => {
   evento.preventDefault();
   try {

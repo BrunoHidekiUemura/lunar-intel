@@ -1,10 +1,3 @@
-/**
- * Script de carga inicial de dados de demonstracao.
- * Uso: npm run seed
- * Recria os arquivos data/*.json do zero com um conjunto consistente de
- * usuarios (1 admin, 2 corretores, 2 clientes) e 10 imoveis, prontos para
- * demonstrar o fluxo principal (simulacao -> catalogo -> agendamento -> venda).
- */
 const fs = require('fs');
 const path = require('path');
 const bcrypt = require('bcryptjs');
@@ -18,7 +11,6 @@ const ARQUIVOS = [
 if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
 ARQUIVOS.forEach((arquivo) => fs.writeFileSync(path.join(DATA_DIR, arquivo), '[]', 'utf-8'));
 
-// Os repositorios sao carregados apos zerar os arquivos para partirem de uma base limpa.
 const usuarioRepository = require('./src/repositories/UsuarioRepository');
 const imovelRepository = require('./src/repositories/ImovelRepository');
 
@@ -112,7 +104,7 @@ imoveisDemo.forEach((dados, indice) => {
     tipo: dados.tipo,
     status: 'Disponivel',
     corretorId: dados.corretor.id,
-    imagens: [`https://picsum.photos/seed/lunarintel${indice}/600/400`],
+    imagens: [0, 1, 2].map((foto) => `https://picsum.photos/seed/lunarintel${indice}-${foto}/800/500`),
     endereco: {
       logradouro: `Rua das Flores, ${100 + indice}`,
       numero: String(100 + indice),

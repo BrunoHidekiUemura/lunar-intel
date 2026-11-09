@@ -7,7 +7,6 @@ const { LIMITE_AGENDAMENTOS_ATIVOS, INTERVALO_MINIMO_DIAS, STATUS_AGENDAMENTO } 
 const UM_DIA_MS = 24 * 60 * 60 * 1000;
 
 class AgendamentoService {
-  /** RF10 - solicitacao de visita, validando RN03, RN04 e RN09. */
   solicitar(clienteId, { imovelId, dataVisita, observacoes }) {
     if (!imovelId || !dataVisita) {
       throw new ValidationError('Imovel e data da visita sao obrigatorios.');
@@ -15,23 +14,20 @@ class AgendamentoService {
 
     const imovel = imovelRepository.findById(imovelId);
 
-    // RN03 - visita so pode ser solicitada para imovel disponivel
     if (!imovel.isDisponivel()) {
-      throw new BusinessRuleError('Este imovel nao esta disponivel para visitas (RN03).');
+      throw new BusinessRuleError('Este imovel nao esta disponivel para visitas.');
     }
 
     const agendamentosDoImovel = agendamentoRepository.findByImovel(imovelId)
       .filter((a) => a.clienteId === Number(clienteId));
 
-    // RN04 - no maximo 3 solicitacoes ativas simultaneas para o mesmo imovel
     const ativos = agendamentosDoImovel.filter((a) => a.estaAtivo());
     if (ativos.length >= LIMITE_AGENDAMENTOS_ATIVOS) {
       throw new BusinessRuleError(
-        `Limite de ${LIMITE_AGENDAMENTOS_ATIVOS} agendamentos ativos para este imovel atingido (RN04).`,
+        `Limite de ${LIMITE_AGENDAMENTOS_ATIVOS} agendamentos ativos para este imovel atingido.`,
       );
     }
 
-    // RN09 - bloqueia novo agendamento se ja existe visita em aberto/agendada nos ultimos 7 dias
     const agora = Date.now();
     const recorrenciaRecente = agendamentosDoImovel.some((a) => {
       if (!a.estaAtivo()) return false;
@@ -40,7 +36,7 @@ class AgendamentoService {
     });
     if (recorrenciaRecente) {
       throw new BusinessRuleError(
-        `Aguarde ${INTERVALO_MINIMO_DIAS} dias entre solicitacoes de visita para o mesmo imovel (RN09).`,
+        `Aguarde ${INTERVALO_MINIMO_DIAS} dias entre solicitacoes de visita para o mesmo imovel.`,
       );
     }
 
@@ -53,7 +49,6 @@ class AgendamentoService {
       status: STATUS_AGENDAMENTO.PENDENTE,
     });
 
-    // RN10 - notifica o corretor responsavel
     notificacaoService.notificar(
       imovel.corretorId,
       'AGENDAMENTO',
@@ -72,7 +67,6 @@ class AgendamentoService {
     return agendamento;
   }
 
-  /** RF19/F19/F22 */
   confirmar(corretorId, agendamentoId) {
     const agendamento = this._buscarEVerificarCorretor(agendamentoId, corretorId);
     agendamento.confirmar();
@@ -109,12 +103,10 @@ class AgendamentoService {
     return agendamentoRepository.salvarEntidade(agendamento);
   }
 
-  /** RF12/F08 - status das visitas do cliente. */
   listarPorCliente(clienteId) {
     return agendamentoRepository.findByCliente(clienteId);
   }
 
-  /** F18/RF21 - solicitacoes recebidas pelo corretor. */
   listarPorCorretor(corretorId) {
     return agendamentoRepository.findByCorretor(corretorId);
   }

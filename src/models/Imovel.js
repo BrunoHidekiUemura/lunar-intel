@@ -2,10 +2,6 @@ const Endereco = require('./Endereco');
 const { BusinessRuleError, ValidationError } = require('../errors/AppError');
 const { STATUS_IMOVEL } = require('../config/constants');
 
-/**
- * Imovel - propriedade disponivel para venda.
- * Possui um Endereco por composicao e esta associado a um Corretor responsavel.
- */
 class Imovel {
   constructor({
     id, titulo, descricao, preco, areaTotal, quartos, banheiros, tipo,
@@ -29,7 +25,6 @@ class Imovel {
     return this.status === STATUS_IMOVEL.DISPONIVEL;
   }
 
-  /** RN02 - so pode ser chamado apos o servico validar que nao ha visitas em aberto. */
   marcarComoVendido(valorVenda) {
     if (!this.isDisponivel()) {
       throw new BusinessRuleError('Somente imoveis disponiveis podem ser marcados como vendidos.');
@@ -38,7 +33,6 @@ class Imovel {
     this.preco = valorVenda || this.preco;
   }
 
-  /** RN12 - imovel inativado some das buscas e recomendacoes. */
   inativar() {
     this.status = STATUS_IMOVEL.INATIVO;
   }

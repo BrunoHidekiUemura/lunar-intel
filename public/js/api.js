@@ -1,7 +1,3 @@
-/**
- * Wrapper simples para a API REST do LUNAR INTEL.
- * Centraliza fetch + cookies de sessao + tratamento padrao de erros (RNF06).
- */
 const Api = {
   async _chamar(metodo, caminho, corpo) {
     const resposta = await fetch(`/api${caminho}`, {

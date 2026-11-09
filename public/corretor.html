@@ -22,7 +22,6 @@
             <button class="tab-btn" data-tab="perfil">Perfil</button>
         </div>
 
-        <!-- RF17/F14/RF18/RF19/RF24 -->
         <section id="tab-portfolio" class="tab-content active">
             <div class="panel">
                 <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
@@ -33,7 +32,6 @@
             <div class="property-grid" id="grid-portfolio" style="margin-top:20px;"></div>
         </section>
 
-        <!-- RF18/F18/F19/RF21/RF22 -->
         <section id="tab-solicitacoes" class="tab-content">
             <div class="panel">
                 <h2><i class="fa-solid fa-calendar-check"></i> Solicitações de visita</h2>
@@ -68,7 +66,26 @@
         </section>
     </div>
 
-    <!-- RF17/RF18 - Modal de cadastro/edicao de imovel -->
+    <div class="modal-overlay" id="modal-detalhe-imovel">
+        <div class="modal-box modal-box-wide">
+            <button type="button" class="btn-fechar-detalhe" id="btn-fechar-detalhe">&times;</button>
+            <div class="carrossel">
+                <button type="button" class="carrossel-seta carrossel-anterior" id="carrossel-anterior"><i class="fa-solid fa-chevron-left"></i></button>
+                <div class="carrossel-img" id="carrossel-img"></div>
+                <button type="button" class="carrossel-seta carrossel-proxima" id="carrossel-proxima"><i class="fa-solid fa-chevron-right"></i></button>
+                <div class="carrossel-dots" id="carrossel-dots"></div>
+            </div>
+            <div class="detalhe-corpo">
+                <h2 id="detalhe-titulo"></h2>
+                <div class="card-price" id="detalhe-preco"></div>
+                <p id="detalhe-endereco" style="color:var(--text-dim); margin-bottom:14px;"></p>
+                <div class="card-features" id="detalhe-features"></div>
+                <p id="detalhe-descricao" style="margin-top:16px; color:var(--text-dim);"></p>
+                <div class="card-actions" id="detalhe-acoes" style="margin-top:20px;"></div>
+            </div>
+        </div>
+    </div>
+
     <div class="modal-overlay" id="modal-imovel">
         <div class="modal-box">
             <h3 id="titulo-modal-imovel">Novo imóvel</h3>
@@ -94,7 +111,14 @@
                     <div class="input-group"><label>Estado (UF)</label><input type="text" id="imovel-estado" maxlength="2"></div>
                     <div class="input-group"><label>CEP</label><input type="text" id="imovel-cep"></div>
                 </div>
-                <div class="input-group"><label>URL da imagem</label><input type="text" id="imovel-imagem"></div>
+                <div class="input-group">
+                    <label>Fotos do imóvel (pode adicionar várias)</label>
+                    <div id="lista-imagens-imovel" class="lista-imagens"></div>
+                    <div style="display:flex; gap:8px;">
+                        <input type="text" id="imovel-nova-imagem" placeholder="https://endereco-da-foto.jpg">
+                        <button type="button" class="btn btn-secondary btn-small" id="btn-add-imagem" style="flex-shrink:0;">+ Adicionar foto</button>
+                    </div>
+                </div>
                 <div style="display:flex; gap:10px;">
                     <button type="submit" class="btn">Salvar</button>
                     <button type="button" class="btn btn-secondary" id="btn-fechar-modal-imovel">Cancelar</button>

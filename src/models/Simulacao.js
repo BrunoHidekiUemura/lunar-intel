@@ -1,10 +1,5 @@
 const { ENTRADA_MAX_PROPORCAO } = require('../config/constants');
 
-/**
- * Simulacao - registra os parametros informados por um Cliente e o resultado
- * do calculo de capacidade de compra (RN01), alem dos imoveis compativeis
- * encontrados no catalogo no momento da simulacao.
- */
 class Simulacao {
   constructor({
     id, clienteId, dataSimulacao, rendaInformada, idadeInformada,
@@ -20,13 +15,6 @@ class Simulacao {
     this.imoveisEncontrados = imoveisEncontrados || [];
   }
 
-  /**
-   * RF08 - filtra, dentro do portfolio informado, os imoveis disponiveis cujo preco
-   * cabe na capacidade de compra calculada.
-   * RN08 - a entrada considerada para cada imovel nunca pode ultrapassar 80% do
-   * valor de avaliacao do bem; isso e verificado aqui como criterio adicional
-   * de compatibilidade (alem do teto global calculado pela Tabela Price).
-   */
   getImoveisCompativeis(portfolio) {
     return portfolio.filter((imovel) => {
       if (imovel.status !== 'Disponivel') return false;
