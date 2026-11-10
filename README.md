@@ -72,6 +72,21 @@ tela (public/js) -> rota (src/routes) -> middleware de login/perfil -> service -
 
 Arquivo editável em [docs/diagrama-classes.svg](docs/diagrama-classes.svg).
 
+## Telas
+
+Prints em [docs/telas/](docs/telas/):
+
+| Tela | Arquivo |
+|---|---|
+| Login e erro de login | `01-login.png`, `02-login-erro.png` |
+| Cadastro | `03-cadastro.png` |
+| Cliente: simulação e erro de validação (idade) | `04-cliente-simulacao.png`, `05-cliente-simulacao-erro-idade.png` |
+| Cliente: catálogo e detalhe do imóvel | `06-cliente-catalogo.png`, `07-cliente-detalhe-imovel.png` |
+| Cliente: erro de regra de negócio (RN09) | `08-cliente-erro-regra-negocio.png` |
+| Cliente: minhas visitas | `09-cliente-visitas.png` |
+| Corretor: portfólio, solicitações e notificações | `10-corretor-portfolio.png`, `11-corretor-solicitacoes.png`, `12-corretor-notificacoes.png` |
+| Administrador: usuários, imóveis e relatório | `13-admin-usuarios.png`, `14-admin-imoveis.png`, `15-admin-relatorio.png` |
+
 ## Conceitos de POO
 
 - **Herança e abstração:** `Cliente`, `Corretor` e `Administrador` herdam de `Usuario`.
