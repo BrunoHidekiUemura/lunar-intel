@@ -23,7 +23,7 @@ function montarNavbar(usuario) {
   nav.innerHTML = `
     <div class="logo">LU<span>NAR</span> INTEL</div>
     <div class="nav-links">
-      <span class="badge-perfil">${usuario.resumoPerfil}</span>
+      <span class="badge-perfil">${esc(usuario.resumoPerfil)}</span>
       <button id="btn-logout">Sair</button>
     </div>
   `;

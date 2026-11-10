@@ -1,9 +1,11 @@
 const imovelRepository = require('../repositories/ImovelRepository');
 const agendamentoRepository = require('../repositories/AgendamentoRepository');
 const usuarioRepository = require('../repositories/UsuarioRepository');
+const notificacaoService = require('./NotificacaoService');
+const Imovel = require('../models/Imovel');
 const Endereco = require('../models/Endereco');
 const { ValidationError, ForbiddenError, BusinessRuleError } = require('../errors/AppError');
-const { STATUS_IMOVEL, STATUS_AGENDAMENTO } = require('../config/constants');
+const { STATUS_IMOVEL, STATUS_AGENDAMENTO, PERFIS } = require('../config/constants');
 
 class ImovelService {
   listarDisponiveis({ tipo, quartos, banheiros, cidade, precoMax } = {}) {
@@ -26,10 +28,53 @@ class ImovelService {
     if (!dados.titulo || !dados.preco || !dados.endereco) {
       throw new ValidationError('Titulo, preco e endereco sao obrigatorios.');
     }
-    if (dados.endereco.cep && !Endereco.validarCEP(dados.endereco.cep)) {
-      throw new ValidationError('CEP invalido.');
-    }
-    return imovelRepository.create({ ...dados, corretorId: Number(corretorId), status: STATUS_IMOVEL.DISPONIVEL });
+    // monta o objeto e valida antes de gravar no arquivo
+    const novoImovel = new Imovel({
+      areaTotal: 0,
+      quartos: 0,
+      banheiros: 0,
+      ...this._camposEditaveis(dados),
+      corretorId: Number(corretorId),
+      status: STATUS_IMOVEL.DISPONIVEL,
+    });
+    novoImovel.validar();
+
+    const imovel = imovelRepository.create(novoImovel);
+    this._avisarClientesCompativeis(imovel, 'acabou de ser cadastrado');
+    return imovel;
+  }
+
+  // so deixa passar o que o corretor pode mudar (status e corretorId ficam de fora)
+  _camposEditaveis(dados) {
+    const resultado = {};
+    ['titulo', 'descricao', 'tipo', 'endereco', 'imagens'].forEach((campo) => {
+      if (dados[campo] !== undefined) resultado[campo] = dados[campo];
+    });
+    ['preco', 'areaTotal', 'quartos', 'banheiros'].forEach((campo) => {
+      if (dados[campo] !== undefined) resultado[campo] = Number(dados[campo]);
+    });
+    return resultado;
+  }
+
+  // avisa os clientes que conseguem comprar o imovel
+  _avisarClientesCompativeis(imovel, acontecimento) {
+    const clientes = usuarioRepository.findMany((u) => u.tipo === PERFIS.CLIENTE && u.ativo && u.rendaMensal);
+    clientes.forEach((cliente) => {
+      let capacidade;
+      try {
+        capacidade = cliente.calcularCapacidadeCompra();
+      } catch (erro) {
+        return; // cliente sem dados validos para simular
+      }
+      if (imovel.preco <= capacidade) {
+        notificacaoService.notificar(
+          cliente.id,
+          'IMOVEL_NOVO',
+          'Novo imovel compativel',
+          `"${imovel.titulo}" ${acontecimento} e cabe no seu orcamento.`,
+        );
+      }
+    });
   }
 
   _verificarTitularidade(imovel, corretorId) {
@@ -41,7 +86,21 @@ class ImovelService {
   atualizar(corretorId, imovelId, dados) {
     const imovel = imovelRepository.findById(imovelId);
     this._verificarTitularidade(imovel, corretorId);
-    return imovelRepository.update(imovelId, dados);
+
+    // depois de vendido o imovel fica congelado (o preco entra no relatorio de vendas)
+    if (imovel.isVendido()) {
+      throw new BusinessRuleError('Um imovel vendido nao pode mais ser editado.');
+    }
+
+    const novosDados = this._camposEditaveis(dados);
+    if (novosDados.preco !== undefined) {
+      imovel.atualizarPreco(novosDados.preco);
+      delete novosDados.preco;
+    }
+    if (novosDados.endereco) novosDados.endereco = new Endereco(novosDados.endereco);
+    Object.assign(imovel, novosDados);
+    imovel.validar();
+    return imovelRepository.salvarEntidade(imovel);
   }
 
   inativar(corretorId, imovelId) {
@@ -49,6 +108,15 @@ class ImovelService {
     this._verificarTitularidade(imovel, corretorId);
     imovel.inativar();
     return imovelRepository.salvarEntidade(imovel);
+  }
+
+  reativar(corretorId, imovelId) {
+    const imovel = imovelRepository.findById(imovelId);
+    this._verificarTitularidade(imovel, corretorId);
+    imovel.reativar();
+    const salvo = imovelRepository.salvarEntidade(imovel);
+    this._avisarClientesCompativeis(salvo, 'voltou a ficar disponivel');
+    return salvo;
   }
 
   marcarComoVendido(corretorId, imovelId, valorVenda) {

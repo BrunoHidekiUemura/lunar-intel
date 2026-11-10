@@ -4,7 +4,9 @@ const { NotFoundError, PersistenceError } = require('../errors/AppError');
 
 class JsonRepository {
   constructor(nomeArquivo, factory) {
-    this.caminho = path.join(__dirname, '..', '..', 'data', nomeArquivo);
+    // LUNAR_DATA_DIR permite apontar para outra pasta (usado nos testes automatizados)
+    const pastaDados = process.env.LUNAR_DATA_DIR || path.join(__dirname, '..', '..', 'data');
+    this.caminho = path.join(pastaDados, nomeArquivo);
     this.factory = factory;
     this._garantirArquivo();
   }

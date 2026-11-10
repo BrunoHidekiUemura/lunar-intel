@@ -31,6 +31,20 @@
                 <button type="submit" class="btn btn-block">Entrar</button>
                 <button type="button" id="btn-recuperar" class="btn btn-secondary btn-block" style="margin-top:10px;">Esqueci minha senha</button>
             </form>
+
+            <form id="form-redefinir" style="display:none; margin-top:24px; padding-top:20px; border-top:1px solid var(--border);">
+                <h3 style="margin-bottom:6px;"><i class="fa-solid fa-key"></i> Redefinir senha</h3>
+                <p style="font-size:13px; color:var(--text-dim); margin-bottom:14px;">Digite o código de 6 dígitos (nesta versão acadêmica ele aparece no terminal do servidor) e escolha a nova senha. O código vale 15 minutos.</p>
+                <div class="input-group">
+                    <label>Código</label>
+                    <input type="text" id="codigo" inputmode="numeric" maxlength="6" required>
+                </div>
+                <div class="input-group">
+                    <label>Nova senha (mínimo 6 caracteres)</label>
+                    <input type="password" id="nova-senha" minlength="6" required>
+                </div>
+                <button type="submit" class="btn btn-block">Salvar nova senha</button>
+            </form>
             <p style="margin-top:16px; font-size:13px; color:var(--text-dim); text-align:center;">
                 Não tem conta? <a href="cadastro.html" style="color:var(--primary);">Cadastre-se</a>
             </p>
@@ -59,6 +73,25 @@
             if (!email) { mostrarAlerta('alerta', 'Informe o e-mail para recuperar a senha.'); return; }
             try {
                 const { mensagem } = await Api.post('/auth/recuperar-senha', { email });
+                mostrarAlerta('alerta', mensagem, 'success');
+                document.getElementById('form-redefinir').style.display = 'block';
+                document.getElementById('codigo').focus();
+            } catch (erro) {
+                mostrarAlerta('alerta', erro.message);
+            }
+        });
+
+        document.getElementById('form-redefinir').addEventListener('submit', async (evento) => {
+            evento.preventDefault();
+            try {
+                const { mensagem } = await Api.post('/auth/redefinir-senha', {
+                    email: document.getElementById('email').value,
+                    codigo: document.getElementById('codigo').value,
+                    senhaNova: document.getElementById('nova-senha').value,
+                });
+                evento.target.reset();
+                evento.target.style.display = 'none';
+                document.getElementById('senha').value = '';
                 mostrarAlerta('alerta', mensagem, 'success');
             } catch (erro) {
                 mostrarAlerta('alerta', erro.message);

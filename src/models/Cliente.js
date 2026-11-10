@@ -12,10 +12,11 @@ class Cliente extends Usuario {
   constructor(dados) {
     super(dados);
     this.tipo = 'CLIENTE';
-    this.rendaMensal = dados.rendaMensal;
-    this.idade = dados.idade;
-    this.poupanca = dados.poupanca || 0;
-    this.fgts = dados.fgts || 0;
+    // garante numero mesmo que o dado venha como texto
+    this.rendaMensal = Number(dados.rendaMensal) || 0;
+    this.idade = Number(dados.idade) || 0;
+    this.poupanca = Number(dados.poupanca) || 0;
+    this.fgts = Number(dados.fgts) || 0;
     this.profissao = dados.profissao || '';
   }
 
@@ -48,7 +49,7 @@ class Cliente extends Usuario {
   }
 
   getResumoPerfil() {
-    return `${this.nome} — Renda mensal: R$ ${(this.rendaMensal || 0).toFixed(2)}`;
+    return `${this.nome} | Renda mensal: R$ ${this.rendaMensal.toFixed(2)}`;
   }
 }
 

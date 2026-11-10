@@ -29,6 +29,12 @@ router.post('/recuperar-senha', asyncHandler(async (req, res) => {
   res.json({ mensagem: 'Se o e-mail existir em nossa base, um codigo de recuperacao foi enviado.' });
 }));
 
+router.post('/redefinir-senha', asyncHandler(async (req, res) => {
+  const { email, codigo, senhaNova } = req.body;
+  await authService.redefinirSenhaComCodigo(email, codigo, senhaNova);
+  res.json({ mensagem: 'Senha redefinida. Ja pode entrar com a nova senha.' });
+}));
+
 router.get('/me', requireAuth, asyncHandler(async (req, res) => {
   const usuario = usuarioRepository.findById(req.session.usuarioId);
   res.json(usuario.paraDadosPublicos());

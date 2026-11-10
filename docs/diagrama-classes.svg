@@ -1,0 +1,226 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2222" height="1475" viewBox="0 0 2222 1475">
+<style>
+  text { font-family: Arial, Helvetica, sans-serif; font-size: 13px; fill: #1a1a1a; }
+  .caixa { fill: #ffffff; stroke: #2b4a6f; stroke-width: 1.5; }
+  .cab { fill: #dce8f5; stroke: #2b4a6f; stroke-width: 1.5; }
+  .sep { stroke: #2b4a6f; stroke-width: 1.2; }
+  .nome { font-weight: bold; font-size: 15px; text-anchor: middle; }
+  .italico { font-style: italic; }
+  .ester { font-size: 12px; text-anchor: middle; fill: #444; }
+  .assoc, .gen { fill: none; stroke: #333; stroke-width: 1.4; }
+  .triangulo { fill: #ffffff; stroke: #333; stroke-width: 1.4; }
+  .losango { fill: #333; stroke: #333; stroke-width: 1.2; }
+  .mult { font-size: 13px; font-weight: bold; fill: #8a1c1c; }
+  .legenda { fill: #fafafa; stroke: #999; }
+</style>
+<rect width="100%" height="100%" fill="#ffffff"/>
+<polyline points="907.5,426 907.5,450" class="gen"/>
+<polygon points="907.5,408 896.5,426 918.5,426" class="triangulo"/>
+<polyline points="700,126.3 236,126.3" class="assoc"/>
+<rect x="700" y="30" width="415" height="378" class="caixa"/>
+<rect x="700" y="30" width="415" height="54" class="cab"/>
+<text x="907.5" y="48" class="ester">«abstract»</text>
+<text x="907.5" y="68" class="nome italico">Usuario</text>
+<line x1="700" y1="84" x2="1115" y2="84" class="sep"/>
+<text x="710" y="104" class="mem">+ id: number</text>
+<text x="710" y="123" class="mem">+ nome: string</text>
+<text x="710" y="142" class="mem">+ email: string</text>
+<text x="710" y="161" class="mem">+ cpf: string</text>
+<text x="710" y="180" class="mem">+ telefone: string</text>
+<text x="710" y="199" class="mem">+ senhaHash: string</text>
+<text x="710" y="218" class="mem">+ dataCadastro: Date</text>
+<text x="710" y="237" class="mem">+ ativo: boolean</text>
+<line x1="700" y1="246" x2="1115" y2="246" class="sep"/>
+<text x="710" y="266" class="mem">+ atualizarDados(nome: string, telefone: string): void</text>
+<text x="710" y="285" class="mem">+ inativarConta(): void</text>
+<text x="710" y="304" class="mem">+ reativarConta(): void</text>
+<text x="710" y="323" class="mem">+ getResumoPerfil(): string</text>
+<text x="710" y="342" class="mem">+ paraDadosPublicos(): object</text>
+<text x="710" y="361" class="mem">+ normalizarCPF(cpf: string): string  «static»</text>
+<text x="710" y="380" class="mem">+ validarCPF(cpf: string): boolean  «static»</text>
+<text x="710" y="399" class="mem">+ validarEmail(email: string): boolean  «static»</text>
+<rect x="40" y="30" width="196" height="231" class="caixa"/>
+<rect x="40" y="30" width="196" height="40" class="cab"/>
+<text x="138" y="55" class="nome">Notificacao</text>
+<line x1="40" y1="70" x2="236" y2="70" class="sep"/>
+<text x="50" y="90" class="mem">+ id: number</text>
+<text x="50" y="109" class="mem">+ usuarioId: number</text>
+<text x="50" y="128" class="mem">+ tipo: string</text>
+<text x="50" y="147" class="mem">+ titulo: string</text>
+<text x="50" y="166" class="mem">+ mensagem: string</text>
+<text x="50" y="185" class="mem">+ lida: boolean</text>
+<text x="50" y="204" class="mem">+ dataEnvio: Date</text>
+<line x1="40" y1="213" x2="236" y2="213" class="sep"/>
+<text x="50" y="233" class="mem">+ marcarComoLida(): void</text>
+<text x="50" y="252" class="mem">+ getTipo(): string</text>
+<text x="692" y="120.3" class="mult" text-anchor="end">1</text>
+<text x="244" y="120.3" class="mult" text-anchor="start">0..*</text>
+<text x="468" y="120.3" class="mult" text-anchor="middle">recebe</text>
+
+<g transform="translate(0, 50)">
+<polyline points="291.5,400 1439,400" class="gen"/>
+<polyline points="291.5,400 291.5,440" class="gen"/>
+<polyline points="945.5,400 945.5,440" class="gen"/>
+<polyline points="1439,400 1439,440" class="gen"/>
+<polyline points="206.6,709 206.6,860" class="assoc"/>
+<polyline points="362.25,709 362.25,769 528.8,769 528.8,860" class="assoc"/>
+<polyline points="418.84999999999997,709 418.84999999999997,739 832.35,739 832.35,860" class="assoc"/>
+<polyline points="908.4,652 908.4,860" class="assoc"/>
+<polyline points="1075.35,652 1075.35,712 1347.4,712 1347.4,860" class="assoc"/>
+<polyline points="1210,965.25 1129,965.25" class="assoc"/>
+<polyline points="1370.3,1319 1370.3,1345 568,1345 568,1034" class="assoc"/>
+<polyline points="247.5,1110 247.5,1390 1484.8,1390 1484.8,1319" class="assoc"/>
+<polyline points="1690,986.3 1840,986.3" class="assoc"/>
+<polygon points="1668,986.3 1679,979.3 1690,986.3 1679,993.3" class="losango"/>
+<rect x="150" y="440" width="283" height="269" class="caixa"/>
+<rect x="150" y="440" width="283" height="40" class="cab"/>
+<text x="291.5" y="465" class="nome">Cliente</text>
+<line x1="150" y1="480" x2="433" y2="480" class="sep"/>
+<text x="160" y="500" class="mem">+ tipo: string</text>
+<text x="160" y="519" class="mem">+ rendaMensal: number</text>
+<text x="160" y="538" class="mem">+ idade: number</text>
+<text x="160" y="557" class="mem">+ poupanca: number</text>
+<text x="160" y="576" class="mem">+ fgts: number</text>
+<text x="160" y="595" class="mem">+ profissao: string</text>
+<line x1="150" y1="604" x2="433" y2="604" class="sep"/>
+<text x="160" y="624" class="mem">+ validarIdade(): boolean</text>
+<text x="160" y="643" class="mem">+ obterParcelaMaxima(): number</text>
+<text x="160" y="662" class="mem">+ getValorEntradaTotal(): number</text>
+<text x="160" y="681" class="mem">+ calcularCapacidadeCompra(): number</text>
+<text x="160" y="700" class="mem">+ getResumoPerfil(): string</text>
+<rect x="760" y="440" width="371" height="212" class="caixa"/>
+<rect x="760" y="440" width="371" height="40" class="cab"/>
+<text x="945.5" y="465" class="nome">Corretor</text>
+<line x1="760" y1="480" x2="1131" y2="480" class="sep"/>
+<text x="770" y="500" class="mem">+ tipo: string</text>
+<text x="770" y="519" class="mem">+ creci: string</text>
+<text x="770" y="538" class="mem">+ especialidade: string</text>
+<text x="770" y="557" class="mem">+ totalVendas: number</text>
+<text x="770" y="576" class="mem">+ comissaoPercentual: number</text>
+<line x1="760" y1="585" x2="1131" y2="585" class="sep"/>
+<text x="770" y="605" class="mem">+ validarCRECI(creci: string): boolean  «static»</text>
+<text x="770" y="624" class="mem">+ registrarVenda(): void</text>
+<text x="770" y="643" class="mem">+ getResumoPerfil(): string</text>
+<rect x="1330" y="440" width="218" height="117" class="caixa"/>
+<rect x="1330" y="440" width="218" height="40" class="cab"/>
+<text x="1439" y="465" class="nome">Administrador</text>
+<line x1="1330" y1="480" x2="1548" y2="480" class="sep"/>
+<text x="1340" y="500" class="mem">+ tipo: string</text>
+<text x="1340" y="519" class="mem">+ nivelAcesso: string</text>
+<line x1="1330" y1="528" x2="1548" y2="528" class="sep"/>
+<text x="1340" y="548" class="mem">+ getResumoPerfil(): string</text>
+<rect x="40" y="860" width="415" height="250" class="caixa"/>
+<rect x="40" y="860" width="415" height="40" class="cab"/>
+<text x="247.5" y="885" class="nome">Simulacao</text>
+<line x1="40" y1="900" x2="455" y2="900" class="sep"/>
+<text x="50" y="920" class="mem">+ id: number</text>
+<text x="50" y="939" class="mem">+ clienteId: number</text>
+<text x="50" y="958" class="mem">+ dataSimulacao: Date</text>
+<text x="50" y="977" class="mem">+ rendaInformada: number</text>
+<text x="50" y="996" class="mem">+ idadeInformada: number</text>
+<text x="50" y="1015" class="mem">+ entradaInformada: number</text>
+<text x="50" y="1034" class="mem">+ capacidadeCompra: number</text>
+<text x="50" y="1053" class="mem">+ imoveisEncontrados: number[]</text>
+<line x1="40" y1="1062" x2="455" y2="1062" class="sep"/>
+<text x="50" y="1082" class="mem">+ getImoveisCompativeis(portfolio: Imovel[]): Imovel[]</text>
+<text x="50" y="1101" class="mem">+ getResumo(): string</text>
+<rect x="470" y="860" width="196" height="174" class="caixa"/>
+<rect x="470" y="860" width="196" height="40" class="cab"/>
+<text x="568" y="885" class="nome">Favorito</text>
+<line x1="470" y1="900" x2="666" y2="900" class="sep"/>
+<text x="480" y="920" class="mem">+ id: number</text>
+<text x="480" y="939" class="mem">+ clienteId: number</text>
+<text x="480" y="958" class="mem">+ imovelId: number</text>
+<text x="480" y="977" class="mem">+ dataAdicao: Date</text>
+<line x1="470" y1="986" x2="666" y2="986" class="sep"/>
+<text x="480" y="1006" class="mem">+ getClienteId(): number</text>
+<text x="480" y="1025" class="mem">+ getImovelId(): number</text>
+<rect x="780" y="860" width="349" height="326" class="caixa"/>
+<rect x="780" y="860" width="349" height="40" class="cab"/>
+<text x="954.5" y="885" class="nome">Agendamento</text>
+<line x1="780" y1="900" x2="1129" y2="900" class="sep"/>
+<text x="790" y="920" class="mem">+ id: number</text>
+<text x="790" y="939" class="mem">+ clienteId: number</text>
+<text x="790" y="958" class="mem">+ corretorId: number</text>
+<text x="790" y="977" class="mem">+ imovelId: number</text>
+<text x="790" y="996" class="mem">+ dataSolicitacao: Date</text>
+<text x="790" y="1015" class="mem">+ dataVisita: Date</text>
+<text x="790" y="1034" class="mem">+ status: string</text>
+<text x="790" y="1053" class="mem">+ observacoes: string</text>
+<line x1="780" y1="1062" x2="1129" y2="1062" class="sep"/>
+<text x="790" y="1082" class="mem">- _transicionarPara(novoStatus: string): void</text>
+<text x="790" y="1101" class="mem">+ confirmar(): void</text>
+<text x="790" y="1120" class="mem">+ realizar(): void</text>
+<text x="790" y="1139" class="mem">+ cancelar(motivo: string): void</text>
+<text x="790" y="1158" class="mem">+ reagendar(novaData: Date): void</text>
+<text x="790" y="1177" class="mem">+ estaAtivo(): boolean</text>
+<rect x="1210" y="860" width="458" height="459" class="caixa"/>
+<rect x="1210" y="860" width="458" height="40" class="cab"/>
+<text x="1439" y="885" class="nome">Imovel</text>
+<line x1="1210" y1="900" x2="1668" y2="900" class="sep"/>
+<text x="1220" y="920" class="mem">+ id: number</text>
+<text x="1220" y="939" class="mem">+ titulo: string</text>
+<text x="1220" y="958" class="mem">+ descricao: string</text>
+<text x="1220" y="977" class="mem">+ preco: number</text>
+<text x="1220" y="996" class="mem">+ areaTotal: number</text>
+<text x="1220" y="1015" class="mem">+ quartos: number</text>
+<text x="1220" y="1034" class="mem">+ banheiros: number</text>
+<text x="1220" y="1053" class="mem">+ tipo: string</text>
+<text x="1220" y="1072" class="mem">+ status: string</text>
+<text x="1220" y="1091" class="mem">+ endereco: Endereco</text>
+<text x="1220" y="1110" class="mem">+ corretorId: number</text>
+<text x="1220" y="1129" class="mem">+ imagens: string[]</text>
+<line x1="1210" y1="1138" x2="1668" y2="1138" class="sep"/>
+<text x="1220" y="1158" class="mem">+ isDisponivel(): boolean</text>
+<text x="1220" y="1177" class="mem">+ isVendido(): boolean</text>
+<text x="1220" y="1196" class="mem">+ marcarComoVendido(valorVenda: number): void</text>
+<text x="1220" y="1215" class="mem">+ inativar(): void</text>
+<text x="1220" y="1234" class="mem">+ reativar(): void</text>
+<text x="1220" y="1253" class="mem">+ validar(): void</text>
+<text x="1220" y="1272" class="mem">+ atualizarPreco(valor: number): void</text>
+<text x="1220" y="1291" class="mem">+ atualizarPreco(valor: number, ehPercentual: boolean): void</text>
+<text x="1220" y="1310" class="mem">+ getDadosCompletos(): object</text>
+<rect x="1840" y="860" width="342" height="231" class="caixa"/>
+<rect x="1840" y="860" width="342" height="40" class="cab"/>
+<text x="2011" y="885" class="nome">Endereco</text>
+<line x1="1840" y1="900" x2="2182" y2="900" class="sep"/>
+<text x="1850" y="920" class="mem">+ logradouro: string</text>
+<text x="1850" y="939" class="mem">+ numero: string</text>
+<text x="1850" y="958" class="mem">+ complemento: string</text>
+<text x="1850" y="977" class="mem">+ bairro: string</text>
+<text x="1850" y="996" class="mem">+ cidade: string</text>
+<text x="1850" y="1015" class="mem">+ estado: string</text>
+<text x="1850" y="1034" class="mem">+ cep: string</text>
+<line x1="1840" y1="1043" x2="2182" y2="1043" class="sep"/>
+<text x="1850" y="1063" class="mem">+ validarCEP(cep: string): boolean  «static»</text>
+<text x="1850" y="1082" class="mem">+ getEnderecoCompleto(): string</text>
+<text x="212.6" y="725" class="mult" text-anchor="start">1</text>
+<text x="212.6" y="854" class="mult" text-anchor="start">0..*</text>
+<text x="200.6" y="784.5" class="mult" text-anchor="end">realiza</text>
+<text x="368.25" y="725" class="mult" text-anchor="start">1</text>
+<text x="534.8" y="854" class="mult" text-anchor="start">0..*</text>
+<text x="445.525" y="763" class="mult" text-anchor="middle">favorita</text>
+<text x="424.84999999999997" y="725" class="mult" text-anchor="start">1</text>
+<text x="838.35" y="854" class="mult" text-anchor="start">0..*</text>
+<text x="772.35" y="733" class="mult" text-anchor="middle">solicita</text>
+<text x="914.4" y="668" class="mult" text-anchor="start">1</text>
+<text x="914.4" y="854" class="mult" text-anchor="start">0..*</text>
+<text x="914.4" y="786" class="mult" text-anchor="start">gerencia</text>
+<text x="1081.35" y="668" class="mult" text-anchor="start">1</text>
+<text x="1353.4" y="854" class="mult" text-anchor="start">0..*</text>
+<text x="1211.375" y="706" class="mult" text-anchor="middle">cadastra</text>
+<text x="1202" y="959.25" class="mult" text-anchor="end">1</text>
+<text x="1137" y="959.25" class="mult" text-anchor="start">0..*</text>
+<text x="1169.5" y="981.25" class="mult" text-anchor="middle">recebe</text>
+<text x="1376.3" y="1335" class="mult" text-anchor="start">1</text>
+<text x="574" y="1050" class="mult" text-anchor="start">0..*</text>
+<text x="969.15" y="1339" class="mult" text-anchor="middle">favoritado</text>
+<text x="253.5" y="1126" class="mult" text-anchor="start">0..*</text>
+<text x="1490.8" y="1335" class="mult" text-anchor="start">0..*</text>
+<text x="866.15" y="1384" class="mult" text-anchor="middle">sugere</text>
+<text x="1696" y="978.3" class="mult" text-anchor="start">1</text>
+<text x="1832" y="978.3" class="mult" text-anchor="end">1</text>
+<text x="1764" y="978.3" class="mult" text-anchor="middle">possui</text>
+</g>
+
+</svg>

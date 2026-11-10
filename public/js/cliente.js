@@ -3,8 +3,6 @@ let mapaImoveisAtual = {};
 
 document.addEventListener('usuario-pronto', (evento) => {
   const usuario = evento.detail;
-  document.getElementById('perfil-nome').value = usuario.nome;
-  document.getElementById('perfil-telefone').value = usuario.telefone;
   document.getElementById('sim-renda').value = usuario.rendaMensal || '';
   document.getElementById('sim-idade').value = usuario.idade || '';
   document.getElementById('sim-poupanca').value = usuario.poupanca || '';
@@ -102,23 +100,28 @@ function atualizarMapaImoveis(imoveis) {
 function cartaoImovel(imovel, favoritoId) {
   const imagem = (imovel.imagens && imovel.imagens[0]) || 'https://placehold.co/600x400?text=LUNAR+INTEL';
   const jaFavoritado = favoritosIds.has(imovel.id) || favoritoId;
+  const disponivel = imovel.status === 'Disponivel';
   return `
     <div class="card" data-id="${imovel.id}">
-      <div class="card-img" style="background-image:url('${imagem}')">
-        <div class="status-tag">${imovel.tipo}</div>
+      <div class="card-img" style="background-image:url('${esc(imagem)}')">
+        ${disponivel
+          ? `<div class="status-tag">${esc(imovel.tipo)}</div>`
+          : `<div class="status-tag ${imovel.status === 'Vendido' ? 'vendido' : 'inativo'}">${esc(imovel.status)}</div>`}
         ${imovel.imagens && imovel.imagens.length > 1 ? `<div class="status-tag" style="left:auto; right:12px; background:rgba(0,0,0,0.6); color:#fff;"><i class="fa-solid fa-images"></i> ${imovel.imagens.length}</div>` : ''}
       </div>
       <div class="card-body">
-        <h3>${imovel.titulo}</h3>
+        <h3>${esc(imovel.titulo)}</h3>
         <div class="card-price">${formatarMoeda(imovel.preco)}</div>
         <div class="card-features">
           <span><i class="fa-solid fa-bed"></i> ${imovel.quartos} quartos</span>
           <span><i class="fa-solid fa-bath"></i> ${imovel.banheiros} banheiros</span>
           <span><i class="fa-solid fa-ruler-combined"></i> ${imovel.areaTotal} m²</span>
         </div>
-        <p style="font-size:13px; color:var(--text-dim); margin-top:10px;">${imovel.endereco.bairro}, ${imovel.endereco.cidade}/${imovel.endereco.estado}</p>
+        <p style="font-size:13px; color:var(--text-dim); margin-top:10px;">${esc(imovel.endereco.bairro)}, ${esc(imovel.endereco.cidade)}/${esc(imovel.endereco.estado)}</p>
         <div class="card-actions">
-          <button class="btn btn-small btn-agendar" data-id="${imovel.id}">Agendar visita</button>
+          ${disponivel
+            ? `<button class="btn btn-small btn-agendar" data-id="${imovel.id}">Agendar visita</button>`
+            : '<small style="color:var(--text-dim);">Não está mais disponível</small>'}
           ${favoritoId
             ? `<button class="btn btn-small btn-danger btn-desfavoritar" data-favorito-id="${favoritoId}">Remover favorito</button>`
             : `<button class="btn btn-small btn-secondary btn-favoritar" data-id="${imovel.id}" ${jaFavoritado ? 'disabled' : ''}>
@@ -158,11 +161,18 @@ function abrirDetalheImovel(imovel) {
     <span><i class="fa-solid fa-bed"></i> ${imovel.quartos} quartos</span>
     <span><i class="fa-solid fa-bath"></i> ${imovel.banheiros} banheiros</span>
     <span><i class="fa-solid fa-ruler-combined"></i> ${imovel.areaTotal} m²</span>
-    <span><i class="fa-solid fa-tag"></i> ${imovel.tipo}</span>
+    <span><i class="fa-solid fa-tag"></i> ${esc(imovel.tipo)}</span>
   `;
   document.getElementById('detalhe-descricao').textContent = imovel.descricao || '';
 
   const jaFavoritado = favoritosIds.has(imovel.id);
+  if (imovel.status !== 'Disponivel') {
+    document.getElementById('detalhe-acoes').innerHTML = `
+      <p style="color:var(--text-dim);">Este imóvel está <strong>${esc(imovel.status)}</strong> e não recebe mais visitas.</p>
+    `;
+    document.getElementById('modal-detalhe-imovel').classList.add('active');
+    return;
+  }
   document.getElementById('detalhe-acoes').innerHTML = `
     <button class="btn btn-agendar-detalhe">Agendar visita</button>
     <button class="btn btn-secondary btn-favoritar-detalhe" ${jaFavoritado ? 'disabled' : ''}>${jaFavoritado ? 'Favoritado' : 'Favoritar'}</button>
@@ -237,6 +247,7 @@ function ativarBotoesImovel() {
 
 function abrirModalAgendamento(imovelId) {
   document.getElementById('agendar-imovel-id').value = imovelId;
+  document.getElementById('agendar-data').min = dataHoraAgoraLocal();
   document.getElementById('alerta-agendamento').innerHTML = '';
   document.getElementById('modal-agendamento').classList.add('active');
 }
@@ -261,19 +272,30 @@ document.getElementById('form-agendamento').addEventListener('submit', async (ev
 
 async function carregarVisitas() {
   const visitas = await Api.get('/agendamentos');
-  const imoveis = await Api.get('/imoveis');
-  const mapaImoveis = {};
-  imoveis.forEach((i) => { mapaImoveis[i.id] = i; });
 
   const corpo = document.getElementById('tabela-visitas');
   corpo.innerHTML = visitas.map((v) => `
     <tr>
-      <td>${mapaImoveis[v.imovelId]?.titulo || `Imóvel #${v.imovelId}`}</td>
+      <td>${esc(v.imovelTitulo || `Imóvel #${v.imovelId}`)}</td>
       <td>${formatarData(v.dataVisita)}</td>
       <td><span class="pill pill-${v.status.toLowerCase()}">${v.status}</span></td>
-      <td>${v.observacoes || '-'}</td>
+      <td>${esc(v.observacoes || '-')}</td>
+      <td>${v.status === 'Pendente' || v.status === 'Confirmado'
+        ? `<button class="btn btn-small btn-danger btn-cancelar-visita" data-id="${v.id}">Cancelar</button>`
+        : ''}</td>
     </tr>
-  `).join('') || '<tr><td colspan="4" class="empty-state">Nenhuma visita solicitada ainda.</td></tr>';
+  `).join('') || '<tr><td colspan="5" class="empty-state">Nenhuma visita solicitada ainda.</td></tr>';
+
+  corpo.querySelectorAll('.btn-cancelar-visita').forEach((botao) => {
+    botao.addEventListener('click', async () => {
+      if (!confirm('Cancelar esta visita?')) return;
+      const motivo = prompt('Motivo do cancelamento (opcional):') || '';
+      try {
+        await Api.put(`/agendamentos/${botao.dataset.id}/cancelar`, { motivo });
+        carregarVisitas();
+      } catch (erro) { alert(erro.message); }
+    });
+  });
 }
 
 async function carregarNotificacoes() {
@@ -281,8 +303,8 @@ async function carregarNotificacoes() {
   const lista = document.getElementById('lista-notificacoes');
   lista.innerHTML = notificacoes.map((n) => `
     <div class="notif-item ${n.lida ? '' : 'nao-lida'}" data-id="${n.id}">
-      <h4>${n.titulo}</h4>
-      <p>${n.mensagem}</p>
+      <h4>${esc(n.titulo)}</h4>
+      <p>${esc(n.mensagem)}</p>
       <small>${formatarData(n.dataEnvio)}</small>
     </div>
   `).join('') || '<p class="empty-state">Nenhuma notificação.</p>';
@@ -294,22 +316,3 @@ async function carregarNotificacoes() {
     });
   });
 }
-
-document.getElementById('form-perfil').addEventListener('submit', async (evento) => {
-  evento.preventDefault();
-  try {
-    await Api.put('/auth/perfil', {
-      nome: document.getElementById('perfil-nome').value,
-      telefone: document.getElementById('perfil-telefone').value,
-    });
-    mostrarAlerta('alerta-perfil', 'Dados atualizados com sucesso.', 'success');
-  } catch (erro) {
-    mostrarAlerta('alerta-perfil', erro.message);
-  }
-});
-
-document.getElementById('btn-inativar').addEventListener('click', async () => {
-  if (!confirm('Tem certeza que deseja inativar sua conta?')) return;
-  await Api.post('/auth/inativar');
-  window.location.href = 'login.html';
-});

@@ -33,6 +33,10 @@ router.delete('/:id', requireAuth, requireRole(PERFIS.CORRETOR), asyncHandler(as
   res.json(imovel);
 }));
 
+router.post('/:id/reativar', requireAuth, requireRole(PERFIS.CORRETOR), asyncHandler(async (req, res) => {
+  res.json(imovelService.reativar(req.session.usuarioId, req.params.id));
+}));
+
 router.post('/:id/vender', requireAuth, requireRole(PERFIS.CORRETOR), asyncHandler(async (req, res) => {
   const imovel = imovelService.marcarComoVendido(req.session.usuarioId, req.params.id, req.body.valorVenda);
   res.json(imovel);

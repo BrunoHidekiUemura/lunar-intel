@@ -27,7 +27,8 @@ class UsuarioRepository extends JsonRepository {
   }
 
   findByCpf(cpf) {
-    return this.findOne((u) => u.cpf === cpf);
+    const somenteNumeros = String(cpf || '').replace(/\D/g, '');
+    return this.findOne((u) => String(u.cpf).replace(/\D/g, '') === somenteNumeros);
   }
 }
 

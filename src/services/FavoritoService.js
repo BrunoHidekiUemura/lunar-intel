@@ -1,10 +1,13 @@
 const favoritoRepository = require('../repositories/FavoritoRepository');
 const imovelRepository = require('../repositories/ImovelRepository');
-const { ValidationError, ForbiddenError } = require('../errors/AppError');
+const { ValidationError, ForbiddenError, BusinessRuleError } = require('../errors/AppError');
 
 class FavoritoService {
   adicionar(clienteId, imovelId) {
-    imovelRepository.findById(imovelId);
+    const imovel = imovelRepository.findById(imovelId);
+    if (!imovel.isDisponivel()) {
+      throw new BusinessRuleError('So e possivel favoritar imoveis disponiveis.');
+    }
     const existente = favoritoRepository.findByClienteEImovel(clienteId, imovelId);
     if (existente) throw new ValidationError('Este imovel ja esta na sua lista de favoritos.');
     return favoritoRepository.create({ clienteId: Number(clienteId), imovelId: Number(imovelId) });

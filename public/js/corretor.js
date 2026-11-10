@@ -3,8 +3,6 @@ let portfolioCompleto = [];
 
 document.addEventListener('usuario-pronto', async (evento) => {
   const usuario = evento.detail;
-  document.getElementById('perfil-nome').value = usuario.nome;
-  document.getElementById('perfil-telefone').value = usuario.telefone;
 
   const [imoveis, agendamentos] = await Promise.all([carregarPortfolio(), carregarSolicitacoes()]);
   document.getElementById('stat-grid').innerHTML = `
@@ -39,12 +37,12 @@ function renderizarGridPortfolio(imoveis) {
   const grid = document.getElementById('grid-portfolio');
   grid.innerHTML = imoveis.map((imovel) => `
     <div class="card" data-id="${imovel.id}">
-      <div class="card-img" style="background-image:url('${(imovel.imagens && imovel.imagens[0]) || 'https://placehold.co/600x400?text=LUNAR+INTEL'}')">
+      <div class="card-img" style="background-image:url('${esc((imovel.imagens && imovel.imagens[0]) || 'https://placehold.co/600x400?text=LUNAR+INTEL')}')">
         <div class="status-tag ${imovel.status === 'Vendido' ? 'vendido' : imovel.status === 'Inativo' ? 'inativo' : ''}">${imovel.status}</div>
         ${imovel.imagens && imovel.imagens.length > 1 ? `<div class="status-tag" style="left:auto; right:12px; background:rgba(0,0,0,0.6); color:#fff;"><i class="fa-solid fa-images"></i> ${imovel.imagens.length}</div>` : ''}
       </div>
       <div class="card-body">
-        <h3>${imovel.titulo}</h3>
+        <h3>${esc(imovel.titulo)}</h3>
         <div class="card-price">${formatarMoeda(imovel.preco)}</div>
         <div class="card-features">
           <span><i class="fa-solid fa-bed"></i> ${imovel.quartos}q</span>
@@ -85,14 +83,21 @@ document.getElementById('portfolio-busca').addEventListener('input', aplicarFilt
 document.getElementById('portfolio-status').addEventListener('change', aplicarFiltroPortfolio);
 document.getElementById('portfolio-ordenar').addEventListener('change', aplicarFiltroPortfolio);
 
+// vendido: nenhuma acao (o imovel fica congelado)
+// inativo: pode editar ou reativar
+// disponivel: pode editar, inativar ou vender
 function botoesAcaoImovel(imovel) {
-  return `
-    <button class="btn btn-small btn-secondary btn-editar" data-id="${imovel.id}">Editar</button>
-    ${imovel.status === 'Disponivel' ? `
-      <button class="btn btn-small btn-danger btn-inativar" data-id="${imovel.id}">Inativar</button>
-      <button class="btn btn-small btn-vender" data-id="${imovel.id}" data-preco="${imovel.preco}">Marcar vendido</button>
-    ` : ''}
-  `;
+  if (imovel.status === 'Vendido') {
+    return '<small style="color:var(--text-dim);">Imóvel vendido, não pode mais ser alterado.</small>';
+  }
+  const editar = `<button class="btn btn-small btn-secondary btn-editar" data-id="${imovel.id}">Editar</button>`;
+  if (imovel.status === 'Inativo') {
+    return `${editar}
+      <button class="btn btn-small btn-reativar" data-id="${imovel.id}">Reativar</button>`;
+  }
+  return `${editar}
+    <button class="btn btn-small btn-danger btn-inativar" data-id="${imovel.id}">Inativar</button>
+    <button class="btn btn-small btn-vender" data-id="${imovel.id}" data-preco="${imovel.preco}">Marcar vendido</button>`;
 }
 
 function ativarBotoesPortfolio(container) {
@@ -102,15 +107,29 @@ function ativarBotoesPortfolio(container) {
   }));
   container.querySelectorAll('.btn-inativar').forEach((b) => b.addEventListener('click', async () => {
     if (!confirm('Inativar este imóvel?')) return;
-    document.getElementById('modal-detalhe-imovel').classList.remove('active');
-    await Api.delete(`/imoveis/${b.dataset.id}`);
-    carregarPortfolio();
+    try {
+      await Api.delete(`/imoveis/${b.dataset.id}`);
+      document.getElementById('modal-detalhe-imovel').classList.remove('active');
+      carregarPortfolio();
+    } catch (erro) { alert(erro.message); }
+  }));
+  container.querySelectorAll('.btn-reativar').forEach((b) => b.addEventListener('click', async () => {
+    try {
+      await Api.post(`/imoveis/${b.dataset.id}/reativar`);
+      document.getElementById('modal-detalhe-imovel').classList.remove('active');
+      carregarPortfolio();
+    } catch (erro) { alert(erro.message); }
   }));
   container.querySelectorAll('.btn-vender').forEach((b) => b.addEventListener('click', async () => {
     const valor = prompt('Valor final de venda (R$):', b.dataset.preco);
     if (!valor) return;
+    const valorVenda = Number(valor);
+    if (Number.isNaN(valorVenda) || valorVenda <= 0) {
+      alert('Informe um valor maior que zero, só com números (ex: 470000).');
+      return;
+    }
     try {
-      await Api.post(`/imoveis/${b.dataset.id}/vender`, { valorVenda: Number(valor) });
+      await Api.post(`/imoveis/${b.dataset.id}/vender`, { valorVenda });
       document.getElementById('modal-detalhe-imovel').classList.remove('active');
       carregarPortfolio();
     } catch (erro) { alert(erro.message); }
@@ -143,7 +162,7 @@ function abrirDetalheImovel(imovel) {
     <span><i class="fa-solid fa-bed"></i> ${imovel.quartos} quartos</span>
     <span><i class="fa-solid fa-bath"></i> ${imovel.banheiros} banheiros</span>
     <span><i class="fa-solid fa-ruler-combined"></i> ${imovel.areaTotal} m²</span>
-    <span><i class="fa-solid fa-tag"></i> ${imovel.tipo}</span>
+    <span><i class="fa-solid fa-tag"></i> ${esc(imovel.tipo)}</span>
   `;
   document.getElementById('detalhe-descricao').textContent = imovel.descricao || '';
 
@@ -218,8 +237,8 @@ function renderizarListaImagens() {
   const container = document.getElementById('lista-imagens-imovel');
   container.innerHTML = imagensImovelAtual.map((url, indice) => `
     <div class="imagem-chip">
-      <img src="${url}" alt="Foto ${indice + 1}" onerror="this.src='https://placehold.co/80x60?text=?'">
-      <span class="imagem-chip-url">${url}</span>
+      <img src="${esc(url)}" alt="Foto ${indice + 1}" onerror="this.src='https://placehold.co/80x60?text=?'">
+      <span class="imagem-chip-url">${esc(url)}</span>
       <button type="button" class="imagem-chip-remover" data-i="${indice}" title="Remover foto">&times;</button>
     </div>
   `).join('') || '<p style="font-size:12px; color:var(--text-dim);">Nenhuma foto adicionada ainda.</p>';
@@ -285,8 +304,8 @@ async function carregarSolicitacoes() {
   const corpo = document.getElementById('tabela-solicitacoes');
   corpo.innerHTML = agendamentos.map((a) => `
     <tr>
-      <td>${a.cliente?.nome || `Cliente #${a.clienteId}`}<br><small style="color:var(--text-dim);">${a.cliente?.telefone || ''}</small></td>
-      <td>${mapaImoveis[a.imovelId]?.titulo || `Imóvel #${a.imovelId}`}</td>
+      <td>${esc(a.cliente?.nome || `Cliente #${a.clienteId}`)}<br><small style="color:var(--text-dim);">${esc(a.cliente?.telefone)}</small></td>
+      <td>${esc(mapaImoveis[a.imovelId]?.titulo || `Imóvel #${a.imovelId}`)}</td>
       <td>${formatarData(a.dataVisita)}</td>
       <td><span class="pill pill-${a.status.toLowerCase()}">${a.status}</span></td>
       <td>
@@ -299,22 +318,28 @@ async function carregarSolicitacoes() {
     </tr>
   `).join('') || '<tr><td colspan="5" class="empty-state">Nenhuma solicitação recebida ainda.</td></tr>';
 
-  corpo.querySelectorAll('.btn-confirmar').forEach((b) => b.addEventListener('click', async () => {
-    await Api.put(`/agendamentos/${b.dataset.id}/confirmar`); carregarSolicitacoes();
+  // executa a acao e mostra a mensagem de erro do servidor, se tiver
+  async function acaoVisita(caminho, corpoRequisicao) {
+    try {
+      await Api.put(caminho, corpoRequisicao);
+      carregarSolicitacoes();
+    } catch (erro) {
+      alert(erro.message);
+    }
+  }
+
+  corpo.querySelectorAll('.btn-confirmar').forEach((b) => b.addEventListener('click', () => {
+    acaoVisita(`/agendamentos/${b.dataset.id}/confirmar`);
   }));
-  corpo.querySelectorAll('.btn-realizar').forEach((b) => b.addEventListener('click', async () => {
-    await Api.put(`/agendamentos/${b.dataset.id}/realizar`); carregarSolicitacoes();
+  corpo.querySelectorAll('.btn-realizar').forEach((b) => b.addEventListener('click', () => {
+    acaoVisita(`/agendamentos/${b.dataset.id}/realizar`);
   }));
-  corpo.querySelectorAll('.btn-cancelar').forEach((b) => b.addEventListener('click', async () => {
+  corpo.querySelectorAll('.btn-cancelar').forEach((b) => b.addEventListener('click', () => {
     const motivo = prompt('Motivo do cancelamento (opcional):') || '';
-    await Api.put(`/agendamentos/${b.dataset.id}/cancelar`, { motivo });
-    carregarSolicitacoes();
+    acaoVisita(`/agendamentos/${b.dataset.id}/cancelar`, { motivo });
   }));
-  corpo.querySelectorAll('.btn-reagendar').forEach((b) => b.addEventListener('click', async () => {
-    const novaData = prompt('Nova data e horário (AAAA-MM-DDTHH:MM):');
-    if (!novaData) return;
-    await Api.put(`/agendamentos/${b.dataset.id}/reagendar`, { dataVisita: novaData });
-    carregarSolicitacoes();
+  corpo.querySelectorAll('.btn-reagendar').forEach((b) => b.addEventListener('click', () => {
+    abrirModalReagendar(b.dataset.id);
   }));
 
   return agendamentos;
@@ -325,7 +350,7 @@ async function carregarNotificacoes() {
   const lista = document.getElementById('lista-notificacoes');
   lista.innerHTML = notificacoes.map((n) => `
     <div class="notif-item ${n.lida ? '' : 'nao-lida'}" data-id="${n.id}">
-      <h4>${n.titulo}</h4><p>${n.mensagem}</p><small>${formatarData(n.dataEnvio)}</small>
+      <h4>${esc(n.titulo)}</h4><p>${esc(n.mensagem)}</p><small>${formatarData(n.dataEnvio)}</small>
     </div>
   `).join('') || '<p class="empty-state">Nenhuma notificação.</p>';
 
@@ -337,21 +362,27 @@ async function carregarNotificacoes() {
   });
 }
 
-document.getElementById('form-perfil').addEventListener('submit', async (evento) => {
-  evento.preventDefault();
-  try {
-    await Api.put('/auth/perfil', {
-      nome: document.getElementById('perfil-nome').value,
-      telefone: document.getElementById('perfil-telefone').value,
-    });
-    mostrarAlerta('alerta-perfil', 'Dados atualizados com sucesso.', 'success');
-  } catch (erro) {
-    mostrarAlerta('alerta-perfil', erro.message);
-  }
+function abrirModalReagendar(agendamentoId) {
+  document.getElementById('reagendar-id').value = agendamentoId;
+  const campoData = document.getElementById('reagendar-data');
+  campoData.value = '';
+  campoData.min = dataHoraAgoraLocal();
+  document.getElementById('alerta-reagendar').innerHTML = '';
+  document.getElementById('modal-reagendar').classList.add('active');
+}
+
+document.getElementById('btn-fechar-reagendar').addEventListener('click', () => {
+  document.getElementById('modal-reagendar').classList.remove('active');
 });
 
-document.getElementById('btn-inativar').addEventListener('click', async () => {
-  if (!confirm('Tem certeza que deseja inativar sua conta?')) return;
-  await Api.post('/auth/inativar');
-  window.location.href = 'login.html';
+document.getElementById('form-reagendar').addEventListener('submit', async (evento) => {
+  evento.preventDefault();
+  const id = document.getElementById('reagendar-id').value;
+  try {
+    await Api.put(`/agendamentos/${id}/reagendar`, { dataVisita: document.getElementById('reagendar-data').value });
+    document.getElementById('modal-reagendar').classList.remove('active');
+    carregarSolicitacoes();
+  } catch (erro) {
+    mostrarAlerta('alerta-reagendar', erro.message);
+  }
 });

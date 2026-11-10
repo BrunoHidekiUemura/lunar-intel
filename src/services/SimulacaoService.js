@@ -9,7 +9,10 @@ class SimulacaoService {
       throw new ValidationError('Renda mensal e idade sao obrigatorias para a simulacao.');
     }
 
-    const cliente = usuarioRepository.update(clienteId, {
+    // aplica os dados so em memoria e valida primeiro; o perfil so e
+    // atualizado se a simulacao for valida
+    const cliente = usuarioRepository.findById(clienteId);
+    Object.assign(cliente, {
       rendaMensal: Number(rendaMensal),
       idade: Number(idade),
       poupanca: Number(poupanca) || 0,
@@ -18,6 +21,7 @@ class SimulacaoService {
 
     const capacidadeCompra = cliente.calcularCapacidadeCompra();
     const entradaInformada = cliente.getValorEntradaTotal();
+    usuarioRepository.salvarEntidade(cliente);
 
     const simulacao = simulacaoRepository.create({
       clienteId: Number(clienteId),

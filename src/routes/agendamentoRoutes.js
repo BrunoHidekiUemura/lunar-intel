@@ -25,8 +25,12 @@ router.put('/:id/reagendar', requireAuth, requireRole(PERFIS.CORRETOR), asyncHan
   res.json(agendamentoService.reagendar(req.session.usuarioId, req.params.id, req.body.dataVisita));
 }));
 
-router.put('/:id/cancelar', requireAuth, requireRole(PERFIS.CORRETOR), asyncHandler(async (req, res) => {
-  res.json(agendamentoService.cancelar(req.session.usuarioId, req.params.id, req.body.motivo));
+router.put('/:id/cancelar', requireAuth, requireRole(PERFIS.CLIENTE, PERFIS.CORRETOR), asyncHandler(async (req, res) => {
+  const { usuarioId, tipo } = req.session;
+  if (tipo === PERFIS.CLIENTE) {
+    return res.json(agendamentoService.cancelarPeloCliente(usuarioId, req.params.id, req.body.motivo));
+  }
+  return res.json(agendamentoService.cancelar(usuarioId, req.params.id, req.body.motivo));
 }));
 
 router.put('/:id/realizar', requireAuth, requireRole(PERFIS.CORRETOR), asyncHandler(async (req, res) => {

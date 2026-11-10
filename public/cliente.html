@@ -94,7 +94,7 @@
                 <h2><i class="fa-solid fa-calendar-check"></i> Minhas visitas</h2>
                 <div class="table-wrap">
                     <table>
-                        <thead><tr><th>Imóvel</th><th>Data da visita</th><th>Status</th><th>Observações</th></tr></thead>
+                        <thead><tr><th>Imóvel</th><th>Data da visita</th><th>Status</th><th>Observações</th><th>Ações</th></tr></thead>
                         <tbody id="tabela-visitas"></tbody>
                     </table>
                 </div>
@@ -118,6 +118,17 @@
                         <div class="input-group"><label>Telefone</label><input type="text" id="perfil-telefone"></div>
                     </div>
                     <button type="submit" class="btn">Salvar alterações</button>
+                </form>
+            </div>
+            <div class="panel">
+                <h2><i class="fa-solid fa-key"></i> Alterar senha</h2>
+                <div id="alerta-senha"></div>
+                <form id="form-senha">
+                    <div class="grid-form">
+                        <div class="input-group"><label>Senha atual</label><input type="password" id="senha-atual" required></div>
+                        <div class="input-group"><label>Nova senha (mínimo 6 caracteres)</label><input type="password" id="senha-nova" minlength="6" required></div>
+                    </div>
+                    <button type="submit" class="btn">Alterar senha</button>
                 </form>
             </div>
             <div class="panel">
@@ -173,5 +184,6 @@
     <script src="js/api.js"></script>
     <script src="js/guard.js" data-perfil="CLIENTE"></script>
     <script src="js/cliente.js"></script>
+    <script src="js/perfil.js"></script>
 </body>
 </html>

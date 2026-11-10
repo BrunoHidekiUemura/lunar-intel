@@ -13,7 +13,7 @@ router.get('/usuarios', asyncHandler(async (req, res) => {
 }));
 
 router.put('/usuarios/:id/status', asyncHandler(async (req, res) => {
-  const usuario = adminService.alterarStatusUsuario(req.params.id, req.body.ativo);
+  const usuario = adminService.alterarStatusUsuario(req.session.usuarioId, req.params.id, req.body.ativo);
   res.json(usuario.paraDadosPublicos());
 }));
 

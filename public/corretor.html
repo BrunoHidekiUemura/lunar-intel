@@ -82,6 +82,17 @@
                 </form>
             </div>
             <div class="panel">
+                <h2><i class="fa-solid fa-key"></i> Alterar senha</h2>
+                <div id="alerta-senha"></div>
+                <form id="form-senha">
+                    <div class="grid-form">
+                        <div class="input-group"><label>Senha atual</label><input type="password" id="senha-atual" required></div>
+                        <div class="input-group"><label>Nova senha (mínimo 6 caracteres)</label><input type="password" id="senha-nova" minlength="6" required></div>
+                    </div>
+                    <button type="submit" class="btn">Alterar senha</button>
+                </form>
+            </div>
+            <div class="panel">
                 <h2>Encerrar conta</h2>
                 <p style="color:var(--text-dim); margin-bottom:16px;">Esta ação inativa sua conta. Você poderá voltar a usar o sistema entrando em contato com a administração.</p>
                 <button class="btn btn-danger" id="btn-inativar">Inativar minha conta</button>
@@ -121,18 +132,18 @@
                     <div class="input-group"><label>Tipo</label>
                         <select id="imovel-tipo"><option>Casa</option><option>Apartamento</option><option>Loft</option></select>
                     </div>
-                    <div class="input-group"><label>Preço (R$)</label><input type="number" id="imovel-preco" required></div>
-                    <div class="input-group"><label>Área total (m²)</label><input type="number" id="imovel-area"></div>
-                    <div class="input-group"><label>Quartos</label><input type="number" id="imovel-quartos"></div>
-                    <div class="input-group"><label>Banheiros</label><input type="number" id="imovel-banheiros"></div>
+                    <div class="input-group"><label>Preço (R$)</label><input type="number" id="imovel-preco" min="1" required></div>
+                    <div class="input-group"><label>Área total (m²)</label><input type="number" id="imovel-area" min="0"></div>
+                    <div class="input-group"><label>Quartos</label><input type="number" id="imovel-quartos" min="0" step="1"></div>
+                    <div class="input-group"><label>Banheiros</label><input type="number" id="imovel-banheiros" min="0" step="1"></div>
                 </div>
                 <div class="grid-form">
                     <div class="input-group"><label>Logradouro</label><input type="text" id="imovel-logradouro"></div>
                     <div class="input-group"><label>Número</label><input type="text" id="imovel-numero"></div>
                     <div class="input-group"><label>Bairro</label><input type="text" id="imovel-bairro"></div>
-                    <div class="input-group"><label>Cidade</label><input type="text" id="imovel-cidade"></div>
+                    <div class="input-group"><label>Cidade</label><input type="text" id="imovel-cidade" required></div>
                     <div class="input-group"><label>Estado (UF)</label><input type="text" id="imovel-estado" maxlength="2"></div>
-                    <div class="input-group"><label>CEP</label><input type="text" id="imovel-cep"></div>
+                    <div class="input-group"><label>CEP</label><input type="text" id="imovel-cep" placeholder="00000-000"></div>
                 </div>
                 <div class="input-group">
                     <label>Fotos do imóvel (pode adicionar várias)</label>
@@ -150,8 +161,28 @@
         </div>
     </div>
 
+    <div class="modal-overlay" id="modal-reagendar">
+        <div class="modal-box">
+            <h3>Reagendar visita</h3>
+            <div id="alerta-reagendar"></div>
+            <form id="form-reagendar">
+                <input type="hidden" id="reagendar-id">
+                <div class="input-group">
+                    <label>Nova data e horário</label>
+                    <input type="datetime-local" id="reagendar-data" required>
+                </div>
+                <p style="font-size:13px; color:var(--text-dim); margin-bottom:16px;">A visita volta para "Pendente" e o cliente recebe um aviso.</p>
+                <div style="display:flex; gap:10px;">
+                    <button type="submit" class="btn">Salvar nova data</button>
+                    <button type="button" class="btn btn-secondary" id="btn-fechar-reagendar">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script src="js/api.js"></script>
     <script src="js/guard.js" data-perfil="CORRETOR"></script>
     <script src="js/corretor.js"></script>
+    <script src="js/perfil.js"></script>
 </body>
 </html>

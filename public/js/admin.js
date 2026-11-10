@@ -1,7 +1,4 @@
-document.addEventListener('usuario-pronto', (evento) => {
-  const usuario = evento.detail;
-  document.getElementById('perfil-nome').value = usuario.nome;
-  document.getElementById('perfil-telefone').value = usuario.telefone;
+document.addEventListener('usuario-pronto', () => {
   carregarRelatorio();
   carregarUsuarios();
   carregarImoveis();
@@ -29,7 +26,7 @@ async function carregarRelatorio() {
     <div class="stat-card"><div class="valor">${relatorio.taxaConversaoPercentual.toFixed(1)}%</div><div class="label">Taxa de conversão</div></div>
   `;
   document.getElementById('tabela-corretores').innerHTML = relatorio.corretores.map((c) => `
-    <tr><td>${c.nome}</td><td>${c.totalVendas}</td></tr>
+    <tr><td>${esc(c.nome)}</td><td>${c.totalVendas}</td></tr>
   `).join('') || '<tr><td colspan="2" class="empty-state">Nenhum corretor cadastrado.</td></tr>';
 }
 
@@ -61,21 +58,25 @@ async function carregarUsuarios() {
   const usuarios = await Api.get('/admin/usuarios');
   document.getElementById('tabela-usuarios').innerHTML = usuarios.map((u) => `
     <tr>
-      <td>${u.nome}</td>
-      <td>${u.email}</td>
+      <td>${esc(u.nome)}</td>
+      <td>${esc(u.email)}</td>
       <td>${u.tipo}</td>
       <td><span class="pill ${u.ativo ? 'pill-disponivel' : 'pill-cancelado'}">${u.ativo ? 'Ativo' : 'Inativo'}</span></td>
-      <td><button class="btn btn-small ${u.ativo ? 'btn-danger' : 'btn-secondary'} btn-status" data-id="${u.id}" data-ativo="${u.ativo}">
+      <td>${u.id === window.usuarioAtual?.id
+        ? '<small style="color:var(--text-dim);">Você</small>'
+        : `<button class="btn btn-small ${u.ativo ? 'btn-danger' : 'btn-secondary'} btn-status" data-id="${u.id}" data-ativo="${u.ativo}">
         ${u.ativo ? 'Bloquear' : 'Reativar'}
-      </button></td>
+      </button>`}</td>
     </tr>
   `).join('');
 
   document.querySelectorAll('.btn-status').forEach((botao) => {
     botao.addEventListener('click', async () => {
       const ativoAtual = botao.dataset.ativo === 'true';
-      await Api.put(`/admin/usuarios/${botao.dataset.id}/status`, { ativo: !ativoAtual });
-      carregarUsuarios();
+      try {
+        await Api.put(`/admin/usuarios/${botao.dataset.id}/status`, { ativo: !ativoAtual });
+        carregarUsuarios();
+      } catch (erro) { alert(erro.message); }
     });
   });
 }
@@ -84,24 +85,11 @@ async function carregarImoveis() {
   const imoveis = await Api.get('/admin/imoveis');
   document.getElementById('tabela-imoveis').innerHTML = imoveis.map((i) => `
     <tr>
-      <td>${i.titulo}</td>
-      <td>${i.tipo}</td>
+      <td>${esc(i.titulo)}</td>
+      <td>${esc(i.tipo)}</td>
       <td>${formatarMoeda(i.preco)}</td>
       <td><span class="pill pill-${i.status.toLowerCase()}">${i.status}</span></td>
-      <td>${i.corretorNome}</td>
+      <td>${esc(i.corretorNome)}</td>
     </tr>
   `).join('') || '<tr><td colspan="5" class="empty-state">Nenhum imóvel cadastrado.</td></tr>';
 }
-
-document.getElementById('form-perfil').addEventListener('submit', async (evento) => {
-  evento.preventDefault();
-  try {
-    await Api.put('/auth/perfil', {
-      nome: document.getElementById('perfil-nome').value,
-      telefone: document.getElementById('perfil-telefone').value,
-    });
-    mostrarAlerta('alerta-perfil', 'Dados atualizados com sucesso.', 'success');
-  } catch (erro) {
-    mostrarAlerta('alerta-perfil', erro.message);
-  }
-});

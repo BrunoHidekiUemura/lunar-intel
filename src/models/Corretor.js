@@ -8,8 +8,8 @@ class Corretor extends Usuario {
     this.tipo = 'CORRETOR';
     this.creci = dados.creci;
     this.especialidade = dados.especialidade || '';
-    this.totalVendas = dados.totalVendas || 0;
-    this.comissaoPercentual = dados.comissaoPercentual || 5;
+    this.totalVendas = Number(dados.totalVendas) || 0;
+    this.comissaoPercentual = Number(dados.comissaoPercentual) || 5;
   }
 
   static validarCRECI(creci) {
@@ -21,7 +21,7 @@ class Corretor extends Usuario {
   }
 
   getResumoPerfil() {
-    return `${this.nome} — CRECI ${this.creci} — ${this.totalVendas} venda(s) realizada(s)`;
+    return `${this.nome} | CRECI ${this.creci} | ${this.totalVendas} venda(s)`;
   }
 }
 

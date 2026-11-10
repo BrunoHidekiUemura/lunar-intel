@@ -73,11 +73,23 @@
                     <button type="submit" class="btn">Salvar alterações</button>
                 </form>
             </div>
+            <div class="panel">
+                <h2><i class="fa-solid fa-key"></i> Alterar senha</h2>
+                <div id="alerta-senha"></div>
+                <form id="form-senha">
+                    <div class="grid-form">
+                        <div class="input-group"><label>Senha atual</label><input type="password" id="senha-atual" required></div>
+                        <div class="input-group"><label>Nova senha (mínimo 6 caracteres)</label><input type="password" id="senha-nova" minlength="6" required></div>
+                    </div>
+                    <button type="submit" class="btn">Alterar senha</button>
+                </form>
+            </div>
         </section>
     </div>
 
     <script src="js/api.js"></script>
     <script src="js/guard.js" data-perfil="ADMINISTRADOR"></script>
     <script src="js/admin.js"></script>
+    <script src="js/perfil.js"></script>
 </body>
 </html>

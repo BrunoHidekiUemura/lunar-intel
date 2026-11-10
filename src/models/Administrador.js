@@ -8,7 +8,7 @@ class Administrador extends Usuario {
   }
 
   getResumoPerfil() {
-    return `${this.nome} — Administrador (nível ${this.nivelAcesso})`;
+    return `${this.nome} (Administrador, nível ${this.nivelAcesso})`;
   }
 }
 

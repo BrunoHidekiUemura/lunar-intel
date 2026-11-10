@@ -31,9 +31,27 @@ function formatarData(isoString) {
   return new Date(isoString).toLocaleString('pt-BR');
 }
 
+// data/hora atual no formato do <input type="datetime-local"> (AAAA-MM-DDTHH:MM),
+// usada como "min" para nao deixar escolher datas no passado
+function dataHoraAgoraLocal() {
+  const agora = new Date();
+  agora.setMinutes(agora.getMinutes() - agora.getTimezoneOffset());
+  return agora.toISOString().slice(0, 16);
+}
+
+// escapa texto digitado pelo usuario antes de colocar dentro de innerHTML
+function esc(texto) {
+  return String(texto ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 function mostrarAlerta(containerId, mensagem, tipo = 'error') {
   const container = document.getElementById(containerId);
   if (!container) return;
-  container.innerHTML = `<div class="alert alert-${tipo}">${mensagem}</div>`;
+  container.innerHTML = `<div class="alert alert-${tipo}">${esc(mensagem)}</div>`;
   if (tipo === 'success') setTimeout(() => { container.innerHTML = ''; }, 4000);
 }

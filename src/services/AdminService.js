@@ -1,7 +1,7 @@
 const usuarioRepository = require('../repositories/UsuarioRepository');
 const imovelRepository = require('../repositories/ImovelRepository');
 const agendamentoRepository = require('../repositories/AgendamentoRepository');
-const { NotFoundError } = require('../errors/AppError');
+const { ValidationError, BusinessRuleError } = require('../errors/AppError');
 const { PERFIS, STATUS_IMOVEL, STATUS_AGENDAMENTO } = require('../config/constants');
 
 class AdminService {
@@ -9,9 +9,14 @@ class AdminService {
     return usuarioRepository.findAll();
   }
 
-  alterarStatusUsuario(usuarioId, ativo) {
+  alterarStatusUsuario(adminId, usuarioId, ativo) {
+    if (typeof ativo !== 'boolean') {
+      throw new ValidationError('Informe "ativo" como true ou false.');
+    }
+    if (Number(usuarioId) === Number(adminId) && !ativo) {
+      throw new BusinessRuleError('Voce nao pode bloquear a sua propria conta.');
+    }
     const usuario = usuarioRepository.findById(usuarioId);
-    if (!usuario) throw new NotFoundError('Usuario nao encontrado.');
     if (ativo) usuario.reativarConta();
     else usuario.inativarConta();
     return usuarioRepository.salvarEntidade(usuario);
@@ -37,8 +42,12 @@ class AdminService {
       ? vendidos.reduce((soma, i) => soma + i.preco, 0) / vendidos.length
       : 0;
 
-    const taxaConversao = realizadas.length
-      ? (vendidos.length / realizadas.length) * 100
+    // conversao = dos imoveis que receberam visita realizada, quantos foram vendidos
+    // (assim o valor fica sempre entre 0% e 100%)
+    const imoveisVisitados = new Set(realizadas.map((a) => a.imovelId));
+    const visitadosEVendidos = vendidos.filter((i) => imoveisVisitados.has(i.id)).length;
+    const taxaConversao = imoveisVisitados.size
+      ? (visitadosEVendidos / imoveisVisitados.size) * 100
       : 0;
 
     return {
