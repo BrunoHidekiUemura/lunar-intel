@@ -29,7 +29,17 @@
   figcaption { font-size: 9pt; font-style: italic; margin-top: 4px; }
   .nota { font-size: 9pt; color: #444; }
   .fluxo { font-family: Consolas, "Courier New", monospace; font-size: 9.5pt; line-height: 1.35; }
-  .sumario li { margin: 3px 0; }
+  @page { @bottom-right { content: counter(page); font: 9pt Arial, sans-serif; color: #555; } }
+  @page :first { @bottom-right { content: none; } }
+  .titulo-sumario { font-size: 16pt; margin-top: 0; }
+  .sumario { list-style: none; margin: 10px 0 0; padding: 0; }
+  .sumario li { margin: 0; }
+  .sumario a { display: flex; align-items: baseline; color: #111; text-decoration: none; }
+  .sumario .t { flex: 0 1 auto; }
+  .sumario .pontos { flex: 1 1 auto; border-bottom: 1px dotted #888; margin: 0 6px; transform: translateY(-3px); }
+  .sumario .pg { flex: 0 0 auto; min-width: 1.6em; text-align: right; }
+  .sumario .nivel1 { font-weight: bold; margin-top: 7px; font-size: 10.5pt; line-height: 1.4; }
+  .sumario .nivel2 { padding-left: 18px; font-size: 9.6pt; line-height: 1.3; }
   @page paisagem { size: A4 landscape; margin: 1.2cm; }
   .paisagem { page: paisagem; page-break-before: always; page-break-after: always; }
   .paisagem figure img { border: none; }
@@ -50,14 +60,10 @@
   <p><b>Aplicação web:</b> {{LINK_APP}}</p>
 </div>
 
-<h2>Sumário</h2>
-<ol class="sumario">
-  <li>Atividade 1 — Definição do Sistema</li>
-  <li>Atividade 2 — Levantamento de Requisitos</li>
-  <li>Atividade 3 — Identificação das Classes</li>
-  <li>Atividade 4 — Diagrama de Classes (atualizado)</li>
-  <li>Implementação — Aplicação Web, Persistência e Tratamento de Exceções</li>
-</ol>
+<div class="quebra"></div>
+<h2 class="titulo-sumario">Sumário</h2>
+<!-- montado pelo script no fim do arquivo; os numeros de pagina sao preenchidos pelo gerar-pdf.js -->
+<ul class="sumario" id="sumario"></ul>
 
 <!-- ===================================================== ATIVIDADE 1 -->
 <div class="quebra"></div>
@@ -819,5 +825,24 @@ npm run seed     # cria os dados de exemplo
 npm start        # http://localhost:3000
 npm test         # testes automatizados</pre>
 
+<script>
+  /*PAGINAS*/
+  // monta o sumario a partir dos titulos que vem depois dele (atividades e suas secoes)
+  (function () {
+    const paginas = window.PAGINAS || {};
+    const lista = document.getElementById('sumario');
+    const titulos = [...document.querySelectorAll('h1.atividade, h2')]
+      .filter((h) => lista.compareDocumentPosition(h) & Node.DOCUMENT_POSITION_FOLLOWING);
+    titulos.forEach((h, i) => {
+      h.id = 'sec' + i;
+      const li = document.createElement('li');
+      li.className = h.tagName === 'H1' ? 'nivel1' : 'nivel2';
+      li.innerHTML = '<a href="#sec' + i + '"><span class="t"></span><span class="pontos"></span><span class="pg"></span></a>';
+      li.querySelector('.t').textContent = h.textContent;
+      li.querySelector('.pg').textContent = paginas['sec' + i] || '00';
+      lista.appendChild(li);
+    });
+  })();
+</script>
 </body>
 </html>
