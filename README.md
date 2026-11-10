@@ -191,7 +191,7 @@ visita realizada, quantos foram vendidos. Fica sempre entre 0% e 100%.
 npm test
 ```
 
-São 47 testes com o `node:test`, que já vem no Node (sem instalar nada):
+São 48 testes com o `node:test`, que já vem no Node (sem instalar nada):
 
 - `tests/models.test.js`: classes de domínio (herança, polimorfismo, sobrecarga,
   transições de status da visita, cálculo da capacidade de compra, validações).
@@ -234,7 +234,7 @@ Todas as rotas ficam em `/api` e respondem JSON.
 4. **Cliente** de novo: mostrar as notificações e o status das visitas.
 5. **Admin** (`admin@lunarintel.com`): relatório, exportar CSV, bloquear um usuário e
    mostrar que ele perde o acesso na hora.
-6. No terminal: `npm test` (47 testes passando).
+6. No terminal: `npm test` (48 testes passando).
 7. Mostrar no código: `Usuario` abstrata e o polimorfismo de `getResumoPerfil()`,
    a sobrecarga de `atualizarPreco()` e as transições de `Agendamento`.
 

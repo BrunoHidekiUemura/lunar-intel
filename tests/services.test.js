@@ -22,7 +22,7 @@ const adminService = require('../src/services/AdminService');
 const notificacaoService = require('../src/services/NotificacaoService');
 const auditoriaService = require('../src/services/AuditoriaService');
 const {
-  ValidationError, BusinessRuleError, ForbiddenError,
+  ValidationError, BusinessRuleError, ForbiddenError, PersistenceError,
 } = require('../src/errors/AppError');
 
 const ARQUIVOS = ['usuarios', 'imoveis', 'simulacoes', 'agendamentos', 'favoritos', 'notificacoes', 'auditoria'];
@@ -156,6 +156,17 @@ describe('Visitas (AgendamentoService)', () => {
       assert.ok(doCliente.includes(titulo), `cliente deveria receber "${titulo}"`);
       assert.ok(doCorretor.includes(titulo), `corretor deveria receber "${titulo}"`);
     }
+  });
+});
+
+describe('Persistencia', () => {
+  test('arquivo corrompido gera PersistenceError com mensagem simples', () => {
+    fs.writeFileSync(path.join(PASTA_TESTE, 'imoveis.json'), '{ isso nao e json');
+    assert.throws(() => imovelService.listarDisponiveis(), (erro) => {
+      assert.ok(erro instanceof PersistenceError);
+      assert.ok(!erro.message.includes('.json'), 'nao deve expor o nome do arquivo');
+      return true;
+    });
   });
 });
 

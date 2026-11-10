@@ -23,7 +23,9 @@ class JsonRepository {
       const registros = JSON.parse(conteudo || '[]');
       return registros.map((registro) => this.factory(registro));
     } catch (erro) {
-      throw new PersistenceError(`Falha ao carregar dados de ${path.basename(this.caminho)}.`);
+      // o detalhe tecnico fica so no log do servidor; o usuario recebe uma mensagem simples
+      console.error(`[LUNAR INTEL] Falha ao carregar ${path.basename(this.caminho)}:`, erro.message);
+      throw new PersistenceError('Nao foi possivel carregar os dados. Tente novamente em instantes.');
     }
   }
 
@@ -31,7 +33,8 @@ class JsonRepository {
     try {
       fs.writeFileSync(this.caminho, JSON.stringify(registros, null, 2), 'utf-8');
     } catch (erro) {
-      throw new PersistenceError(`Falha ao salvar dados em ${path.basename(this.caminho)}.`);
+      console.error(`[LUNAR INTEL] Falha ao salvar ${path.basename(this.caminho)}:`, erro.message);
+      throw new PersistenceError('Nao foi possivel salvar os dados. Nenhuma alteracao foi feita.');
     }
   }
 
