@@ -5,7 +5,7 @@ const bcrypt = require('bcryptjs');
 const DATA_DIR = path.join(__dirname, 'data');
 const ARQUIVOS = [
   'usuarios.json', 'imoveis.json', 'simulacoes.json',
-  'agendamentos.json', 'favoritos.json', 'notificacoes.json',
+  'agendamentos.json', 'favoritos.json', 'notificacoes.json', 'auditoria.json',
 ];
 
 if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });

@@ -19,11 +19,13 @@ const agendamentoService = require('../src/services/AgendamentoService');
 const simulacaoService = require('../src/services/SimulacaoService');
 const favoritoService = require('../src/services/FavoritoService');
 const adminService = require('../src/services/AdminService');
+const notificacaoService = require('../src/services/NotificacaoService');
+const auditoriaService = require('../src/services/AuditoriaService');
 const {
   ValidationError, BusinessRuleError, ForbiddenError,
 } = require('../src/errors/AppError');
 
-const ARQUIVOS = ['usuarios', 'imoveis', 'simulacoes', 'agendamentos', 'favoritos', 'notificacoes'];
+const ARQUIVOS = ['usuarios', 'imoveis', 'simulacoes', 'agendamentos', 'favoritos', 'notificacoes', 'auditoria'];
 const SENHA_HASH = bcrypt.hashSync('123456', 4);
 const DATA_FUTURA = '2099-01-10T10:00';
 
@@ -143,6 +145,29 @@ describe('Visitas (AgendamentoService)', () => {
     const visita = agendamentoService.solicitar(cliente.id, { imovelId: criarImovel(corretor).id, dataVisita: DATA_FUTURA });
     assert.throws(() => agendamentoService.reagendar(corretor.id, visita.id, undefined), ValidationError);
     assert.equal(agendamentoService.reagendar(corretor.id, visita.id, '2099-02-01T15:00').dataVisita, '2099-02-01T15:00');
+  });
+
+  test('RN10: cada mudanca de status avisa o cliente e o corretor', () => {
+    const visita = agendamentoService.solicitar(cliente.id, { imovelId: criarImovel(corretor).id, dataVisita: DATA_FUTURA });
+    agendamentoService.confirmar(corretor.id, visita.id);
+    const doCliente = notificacaoService.listarPorUsuario(cliente.id).map((n) => n.titulo);
+    const doCorretor = notificacaoService.listarPorUsuario(corretor.id).map((n) => n.titulo);
+    for (const titulo of ['Nova solicitacao de visita', 'Visita confirmada']) {
+      assert.ok(doCliente.includes(titulo), `cliente deveria receber "${titulo}"`);
+      assert.ok(doCorretor.includes(titulo), `corretor deveria receber "${titulo}"`);
+    }
+  });
+});
+
+describe('Auditoria (RNF07)', () => {
+  test('registra data, autor e acao, do mais recente para o mais antigo', () => {
+    auditoriaService.registrar({ usuarioId: corretor.id, acao: 'Imovel cadastrado', sucesso: true });
+    auditoriaService.registrar({ usuarioId: null, acao: 'Login (falhou)', detalhe: 'e-mail: x@t.com', sucesso: false });
+    const [ultimo, primeiro] = auditoriaService.listar();
+    assert.equal(ultimo.acao, 'Login (falhou)');
+    assert.equal(ultimo.usuarioNome, '-');
+    assert.equal(primeiro.usuarioNome, 'Bruno');
+    assert.ok(!Number.isNaN(new Date(primeiro.dataHora).getTime()));
   });
 });
 

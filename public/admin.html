@@ -19,6 +19,7 @@
             <button class="tab-btn active" data-tab="usuarios">Usuários</button>
             <button class="tab-btn" data-tab="imoveis">Imóveis</button>
             <button class="tab-btn" data-tab="relatorio">Relatório</button>
+            <button class="tab-btn" data-tab="auditoria">Auditoria</button>
             <button class="tab-btn" data-tab="perfil">Perfil</button>
         </div>
 
@@ -56,6 +57,18 @@
                     <table>
                         <thead><tr><th>Corretor</th><th>Vendas realizadas</th></tr></thead>
                         <tbody id="tabela-corretores"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section id="tab-auditoria" class="tab-content">
+            <div class="panel">
+                <h2><i class="fa-solid fa-clipboard-list"></i> Log de auditoria</h2>
+                <div class="table-wrap">
+                    <table>
+                        <thead><tr><th>Data e hora</th><th>Usuário</th><th>Perfil</th><th>Ação</th><th>Detalhe</th></tr></thead>
+                        <tbody id="tabela-auditoria"></tbody>
                     </table>
                 </div>
             </div>

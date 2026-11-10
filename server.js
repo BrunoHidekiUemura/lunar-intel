@@ -10,6 +10,7 @@ const favoritoRoutes = require('./src/routes/favoritoRoutes');
 const notificacaoRoutes = require('./src/routes/notificacaoRoutes');
 const adminRoutes = require('./src/routes/adminRoutes');
 const { errorHandler, rotaNaoEncontrada } = require('./src/middlewares/errorHandler');
+const auditoria = require('./src/middlewares/auditoria');
 
 const app = express();
 const PORTA = process.env.PORT || 3000;
@@ -20,6 +21,8 @@ app.use(cookieSession({
   keys: [process.env.SESSION_SECRET || 'lunar-intel-chave-academica'],
   maxAge: 24 * 60 * 60 * 1000,
 }));
+
+app.use('/api', auditoria);
 
 app.use('/api/auth', authRoutes);
 app.use('/api/imoveis', imovelRoutes);

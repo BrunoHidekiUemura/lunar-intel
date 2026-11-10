@@ -38,7 +38,7 @@ npm test         # roda os testes automatizados
 |---|---|
 | **Cliente** | simula o financiamento e vê os imóveis compatíveis, busca no catálogo com filtros, favorita imóveis, pede visitas e cancela as próprias visitas, recebe notificações |
 | **Corretor** | cadastra, edita, inativa, reativa e vende os imóveis do próprio portfólio (com várias fotos), confirma, reagenda, cancela e marca visitas como realizadas, vê o contato do cliente |
-| **Administrador** | vê o relatório (vendas, ticket médio, taxa de conversão, vendas por corretor) e exporta em CSV, lista todos os imóveis, bloqueia e reativa usuários |
+| **Administrador** | vê o relatório (vendas, ticket médio, taxa de conversão, vendas por corretor) e exporta em CSV, lista todos os imóveis, bloqueia e reativa usuários, consulta o log de auditoria |
 | **Todos** | editam nome e telefone, trocam a senha, recuperam a senha por código |
 
 ## Organização do código
@@ -126,7 +126,7 @@ Prints em [docs/telas/](docs/telas/):
 | RN07: admin não agenda visitas | rotas de agendamento não aceitam o perfil `ADMINISTRADOR` |
 | RN08: entrada de no máximo 80% do valor do imóvel | `Simulacao.getImoveisCompativeis()` |
 | RN09: mesmo imóvel: sem visita em aberto e sem pedido nos últimos 7 dias | `AgendamentoService.solicitar()` |
-| RN10: avisos quando a visita muda de status | `NotificacaoService.notificar()`, chamado pelo `AgendamentoService` |
+| RN10: cada mudança de status da visita avisa o cliente e o corretor ao mesmo tempo | `AgendamentoService._notificarEnvolvidos()` |
 | RN11: formato do CRECI (ex.: 12345-F) | `Corretor.validarCRECI()` |
 | RN12: imóvel inativo some das buscas | `Imovel.inativar()`, `ImovelService.listarDisponiveis()` |
 | RN13: imóvel vendido fica congelado (não edita, não inativa); só imóvel inativo pode ser reativado | `Imovel.inativar()`, `Imovel.reativar()`, `ImovelService.atualizar()` |
@@ -160,6 +160,10 @@ visita realizada, quantos foram vendidos. Fica sempre entre 0% e 100%.
   revelar quem tem conta. O código vale 15 minutos, só funciona uma vez e é descartado
   depois de 5 tentativas erradas.
 - Tudo o que o usuário digita passa por `esc()` antes de aparecer na tela (evita XSS).
+- **Auditoria (RNF07):** o middleware `src/middlewares/auditoria.js` registra em
+  `data/auditoria.json` cadastros, logins (inclusive os que falharam), logouts e toda mudança
+  de status (imóvel, visita, conta), com data e hora e quem fez. O administrador consulta na aba
+  **Auditoria**. Senhas nunca entram no log.
 
 ## Persistência e tratamento de erros
 
@@ -187,7 +191,7 @@ visita realizada, quantos foram vendidos. Fica sempre entre 0% e 100%.
 npm test
 ```
 
-São 45 testes com o `node:test`, que já vem no Node (sem instalar nada):
+São 47 testes com o `node:test`, que já vem no Node (sem instalar nada):
 
 - `tests/models.test.js`: classes de domínio (herança, polimorfismo, sobrecarga,
   transições de status da visita, cálculo da capacidade de compra, validações).
@@ -215,7 +219,7 @@ Todas as rotas ficam em `/api` e respondem JSON.
 | `PUT /agendamentos/:id/cancelar` | cliente / corretor | cancelar visita |
 | `GET /favoritos`, `POST /favoritos`, `DELETE /favoritos/:id` | cliente | favoritos |
 | `GET /notificacoes`, `PUT /notificacoes/:id/lida` | logado | notificações |
-| `GET /admin/relatorio`, `GET /admin/usuarios`, `PUT /admin/usuarios/:id/status`, `GET /admin/imoveis` | admin | gestão |
+| `GET /admin/relatorio`, `GET /admin/usuarios`, `PUT /admin/usuarios/:id/status`, `GET /admin/imoveis`, `GET /admin/auditoria` | admin | gestão e auditoria |
 
 ## Roteiro para a apresentação
 
@@ -230,7 +234,7 @@ Todas as rotas ficam em `/api` e respondem JSON.
 4. **Cliente** de novo: mostrar as notificações e o status das visitas.
 5. **Admin** (`admin@lunarintel.com`): relatório, exportar CSV, bloquear um usuário e
    mostrar que ele perde o acesso na hora.
-6. No terminal: `npm test` (45 testes passando).
+6. No terminal: `npm test` (47 testes passando).
 7. Mostrar no código: `Usuario` abstrata e o polimorfismo de `getResumoPerfil()`,
    a sobrecarga de `atualizarPreco()` e as transições de `Agendamento`.
 

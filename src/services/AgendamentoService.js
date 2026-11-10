@@ -8,6 +8,12 @@ const { LIMITE_AGENDAMENTOS_ATIVOS, INTERVALO_MINIMO_DIAS, STATUS_AGENDAMENTO } 
 const UM_DIA_MS = 24 * 60 * 60 * 1000;
 
 class AgendamentoService {
+  // RN10 - toda mudanca de status avisa o cliente e o corretor ao mesmo tempo
+  _notificarEnvolvidos(agendamento, titulo, mensagemCliente, mensagemCorretor) {
+    notificacaoService.notificar(agendamento.clienteId, 'AGENDAMENTO', titulo, mensagemCliente);
+    notificacaoService.notificar(agendamento.corretorId, 'AGENDAMENTO', titulo, mensagemCorretor);
+  }
+
   // a data precisa ser valida e estar no futuro
   _validarDataVisita(dataVisita) {
     if (!dataVisita) throw new ValidationError('Informe a data da visita.');
@@ -67,10 +73,10 @@ class AgendamentoService {
       status: STATUS_AGENDAMENTO.PENDENTE,
     });
 
-    notificacaoService.notificar(
-      imovel.corretorId,
-      'AGENDAMENTO',
+    this._notificarEnvolvidos(
+      agendamento,
       'Nova solicitacao de visita',
+      `Seu pedido de visita ao imovel "${imovel.titulo}" foi enviado ao corretor.`,
       `O cliente solicitou uma visita para o imovel "${imovel.titulo}".`,
     );
 
@@ -94,8 +100,10 @@ class AgendamentoService {
     }
     agendamento.confirmar();
     const salvo = agendamentoRepository.salvarEntidade(agendamento);
-    notificacaoService.notificar(
-      agendamento.clienteId, 'AGENDAMENTO', 'Visita confirmada', 'Sua visita foi confirmada pelo corretor.',
+    this._notificarEnvolvidos(
+      agendamento, 'Visita confirmada',
+      'Sua visita foi confirmada pelo corretor.',
+      `Voce confirmou a visita ao imovel "${imovel.titulo}".`,
     );
     return salvo;
   }
@@ -105,8 +113,10 @@ class AgendamentoService {
     this._validarDataVisita(novaData);
     agendamento.reagendar(novaData);
     const salvo = agendamentoRepository.salvarEntidade(agendamento);
-    notificacaoService.notificar(
-      agendamento.clienteId, 'AGENDAMENTO', 'Visita reagendada', 'O corretor propos uma nova data para sua visita.',
+    this._notificarEnvolvidos(
+      agendamento, 'Visita reagendada',
+      'O corretor propos uma nova data para sua visita.',
+      'Voce reagendou uma visita. O cliente foi avisado.',
     );
     return salvo;
   }
@@ -115,8 +125,10 @@ class AgendamentoService {
     const agendamento = this._buscarEVerificarCorretor(agendamentoId, corretorId);
     agendamento.cancelar(motivo);
     const salvo = agendamentoRepository.salvarEntidade(agendamento);
-    notificacaoService.notificar(
-      agendamento.clienteId, 'AGENDAMENTO', 'Visita cancelada', motivo || 'Sua visita foi cancelada pelo corretor.',
+    this._notificarEnvolvidos(
+      agendamento, 'Visita cancelada',
+      motivo || 'Sua visita foi cancelada pelo corretor.',
+      'Voce cancelou uma visita. O cliente foi avisado.',
     );
     return salvo;
   }
@@ -125,8 +137,10 @@ class AgendamentoService {
     const agendamento = this._buscarEVerificarCorretor(agendamentoId, corretorId);
     agendamento.realizar();
     const salvo = agendamentoRepository.salvarEntidade(agendamento);
-    notificacaoService.notificar(
-      agendamento.clienteId, 'AGENDAMENTO', 'Visita realizada', 'Obrigado pela visita! O corretor vai entrar em contato.',
+    this._notificarEnvolvidos(
+      agendamento, 'Visita realizada',
+      'Obrigado pela visita! O corretor vai entrar em contato.',
+      'Visita marcada como realizada.',
     );
     return salvo;
   }
@@ -138,8 +152,9 @@ class AgendamentoService {
     }
     agendamento.cancelar(motivo);
     const salvo = agendamentoRepository.salvarEntidade(agendamento);
-    notificacaoService.notificar(
-      agendamento.corretorId, 'AGENDAMENTO', 'Visita cancelada pelo cliente',
+    this._notificarEnvolvidos(
+      agendamento, 'Visita cancelada pelo cliente',
+      'Voce cancelou sua visita. O corretor foi avisado.',
       motivo || 'O cliente cancelou a visita agendada.',
     );
     return salvo;

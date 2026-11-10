@@ -1,5 +1,6 @@
 const express = require('express');
 const adminService = require('../services/AdminService');
+const auditoriaService = require('../services/AuditoriaService');
 const asyncHandler = require('../middlewares/asyncHandler');
 const { requireAuth, requireRole } = require('../middlewares/auth');
 const { PERFIS } = require('../config/constants');
@@ -23,6 +24,11 @@ router.get('/imoveis', asyncHandler(async (req, res) => {
 
 router.get('/relatorio', asyncHandler(async (req, res) => {
   res.json(adminService.gerarRelatorio());
+}));
+
+// RNF07 - inspecao dos logs de auditoria
+router.get('/auditoria', asyncHandler(async (req, res) => {
+  res.json(auditoriaService.listar());
 }));
 
 module.exports = router;

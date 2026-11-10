@@ -4,6 +4,22 @@ document.addEventListener('usuario-pronto', () => {
   carregarImoveis();
 });
 
+async function carregarAuditoria() {
+  const registros = await Api.get('/admin/auditoria');
+  document.getElementById('tabela-auditoria').innerHTML = registros.map((r) => `
+    <tr>
+      <td>${new Date(r.dataHora).toLocaleString('pt-BR')}</td>
+      <td>${esc(r.usuarioNome)}</td>
+      <td>${esc(r.usuarioTipo)}</td>
+      <td><span class="pill ${r.sucesso ? 'pill-disponivel' : 'pill-cancelado'}">${esc(r.acao)}</span></td>
+      <td>${esc(r.detalhe)}</td>
+    </tr>
+  `).join('') || '<tr><td colspan="5" class="empty-state">Nenhum evento registrado.</td></tr>';
+}
+
+// recarrega o log sempre que a aba e aberta
+document.querySelector('[data-tab="auditoria"]').addEventListener('click', carregarAuditoria);
+
 document.querySelectorAll('.tab-btn').forEach((botao) => {
   botao.addEventListener('click', () => {
     document.querySelectorAll('.tab-btn').forEach((b) => b.classList.remove('active'));
