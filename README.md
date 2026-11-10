@@ -3,6 +3,11 @@
 Projeto semestral da disciplina de Sistema Web Orientado a Objetos (BRIPROO_2026-2).
 Alunos: Bruno Hideki Uemura e José Henrique de Lima.
 
+**Aplicação online:** https://lunar-intel.onrender.com (contas de teste mais abaixo; o primeiro
+acesso pode levar até 1 minuto, porque o servidor gratuito "dorme" quando fica parado)
+
+**Documento do projeto:** [docs/documento/LUNAR_INTEL_documento.pdf](docs/documento/LUNAR_INTEL_documento.pdf)
+
 O cliente faz uma simulação de financiamento, o sistema mostra só os imóveis que cabem
 no orçamento dele, e a partir daí ele pode pedir uma visita. O corretor recebe o pedido,
 confirma, faz a visita e, se fechar negócio, marca o imóvel como vendido. O administrador
@@ -249,8 +254,10 @@ Todas as rotas ficam em `/api` e respondem JSON.
   sistema usa uma chave fixa de desenvolvimento. Em produção, defina a variável.
 - `npm run seed` apaga todos os dados atuais antes de criar os de exemplo.
 
-## Publicar online (opcional)
+## Publicação online
 
-Como os dados ficam em arquivos, o ideal é usar o Render ou o Railway, que rodam o
-`npm start` normalmente. A Vercel não serve, porque não guarda arquivos entre uma
-requisição e outra.
+A aplicação está no Render (plano gratuito), configurada pelo arquivo `render.yaml`. Cada
+push na branch `main` publica a nova versão automaticamente.
+
+No plano gratuito o disco não é permanente: quando o servidor reinicia (depois de um tempo
+parado ou de uma nova publicação), os dados voltam aos de exemplo que estão em `data/`.
