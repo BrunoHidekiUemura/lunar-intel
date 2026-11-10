@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>LUNAR INTEL - Projeto Semestral BRIPROO_2026-2</title>
+<style>
+  @page { size: A4; margin: 2cm 2cm 2cm 2cm; }
+  body { font-family: Arial, Helvetica, sans-serif; font-size: 10.5pt; line-height: 1.45; color: #111; }
+  h1 { font-size: 20pt; margin: 0 0 14px; }
+  h2 { font-size: 14pt; margin: 22px 0 8px; }
+  h3 { font-size: 11.5pt; margin: 16px 0 6px; }
+  p { margin: 6px 0; text-align: justify; }
+  ul, ol { margin: 6px 0 6px 22px; padding: 0; }
+  li { margin: 2px 0; }
+  table { width: 100%; border-collapse: collapse; margin: 8px 0 12px; font-size: 9.5pt; page-break-inside: auto; }
+  tr { page-break-inside: avoid; }
+  th, td { border: 1px solid #c9d6e3; padding: 5px 7px; text-align: left; vertical-align: top; }
+  th { background: #e8f4fc; font-weight: bold; }
+  code { font-family: Consolas, "Courier New", monospace; font-size: 9pt; background: #f3f5f7; padding: 0 3px; }
+  pre { font-family: Consolas, "Courier New", monospace; font-size: 8.8pt; background: #f3f5f7; border: 1px solid #dde3e9; padding: 8px 10px; white-space: pre-wrap; page-break-inside: avoid; }
+  .capa { text-align: center; margin-top: 40px; }
+  .capa h1 { font-size: 18pt; margin-bottom: 4px; }
+  .capa .sub { font-size: 14pt; font-weight: bold; margin-bottom: 30px; }
+  .ident p { text-align: left; margin: 3px 0; }
+  .quebra { page-break-before: always; }
+  .atividade { font-size: 22pt; margin-top: 0; }
+  figure { margin: 10px 0; text-align: center; page-break-inside: avoid; }
+  figure img { max-width: 100%; border: 1px solid #ccc; }
+  figcaption { font-size: 9pt; font-style: italic; margin-top: 4px; }
+  .nota { font-size: 9pt; color: #444; }
+  .fluxo { font-family: Consolas, "Courier New", monospace; font-size: 9.5pt; line-height: 1.35; }
+  .sumario li { margin: 3px 0; }
+  @page paisagem { size: A4 landscape; margin: 1.2cm; }
+  .paisagem { page: paisagem; page-break-before: always; page-break-after: always; }
+  .paisagem figure img { border: none; }
+</style>
+</head>
+<body>
+
+<div class="capa">
+  <h1>SISTEMA WEB ORIENTADO A OBJETOS</h1>
+  <div class="sub">(BRIPROO_2026-2)</div>
+</div>
+<div class="ident">
+  <p><b>Professor:</b> Fabrício Quintanilha</p>
+  <p><b>Alunos (Dupla):</b> Bruno Hideki Uemura BI3026191 e José Henrique de Lima BI3040925</p>
+  <p><b>Sistema:</b> LUNAR INTEL – Sistema Imobiliário Inteligente</p>
+  <p><b>Repositório:</b> {{LINK_REPO}}</p>
+  <p><b>Aplicação web:</b> {{LINK_APP}}</p>
+</div>
+
+<h2>Sumário</h2>
+<ol class="sumario">
+  <li>Atividade 1 — Definição do Sistema</li>
+  <li>Atividade 2 — Levantamento de Requisitos</li>
+  <li>Atividade 3 — Identificação das Classes</li>
+  <li>Atividade 4 — Diagrama de Classes (atualizado)</li>
+  <li>Implementação — Aplicação Web, Persistência e Tratamento de Exceções</li>
+</ol>
+
+<!-- ===================================================== ATIVIDADE 1 -->
+<div class="quebra"></div>
+<h1 class="atividade">Atividade 1 — Definição do Sistema</h1>
+
+<h2>1. Nome do Sistema</h2>
+<p><b>LUNAR INTEL</b> – Sistema Imobiliário Inteligente</p>
+
+<h2>2. Área de Atuação</h2>
+<p>Imobiliária / Corretagem e Gestão de Imóveis</p>
+
+<h2>3. Descrição do Problema</h2>
+<p>Atualmente, o mercado imobiliário brasileiro apresenta lacunas operacionais significativas que prejudicam a experiência de compra e a eficiência comercial:</p>
+<ul>
+  <li><b>Desconexão entre simulação financeira e catálogo de imóveis:</b> os compradores realizam simulações em plataformas bancárias e buscam imóveis em portais separados, sem garantia de que os imóveis visualizados se enquadram em sua real capacidade orçamentária.</li>
+  <li><b>Processo manual e ineficiente:</b> corretores realizam triagens manuais exaustivas para cada cliente baseando-se em estimativas informais do que o cliente pode pagar.</li>
+  <li><b>Desperdício de recursos e frustração:</b> clientes frequentemente realizam visitas a imóveis que posteriormente descobrem ser inviáveis financeiramente, gerando retrabalho e perda de tempo para ambas as partes.</li>
+  <li><b>Ausência de rastreabilidade e histórico:</b> falta de registro centralizado das simulações, preferências e histórico de interações dos clientes ao longo da jornada.</li>
+  <li><b>Descentralização de dados:</b> informações dispersas entre planilhas, agendas físicas e mensagens instantâneas, gerando retrabalho e inconsistências operacionais.</li>
+</ul>
+
+<h2>4. Descrição da Solução Proposta</h2>
+<p>O LUNAR INTEL é uma plataforma web completa orientada a objetos que centraliza e integra todo o ciclo de prospecção, qualificação financeira e negociação imobiliária em um único ecossistema. O sistema calcula automaticamente a capacidade de compra respeitando o comprometimento máximo prudencial de 30% da renda, cruza esse resultado com a base de dados e exibe apenas imóveis que se enquadram no teto financeiro do comprador. A plataforma também conta com gestão centralizada de imóveis, controle de acesso baseado em perfis (RBAC), módulo de agendamentos de visitas e painéis gerenciais.</p>
+
+<h2>5. Público-Alvo</h2>
+<ul>
+  <li><b>Compradores de Imóveis (Pessoas Físicas):</b> usuários entre 18 e 70 anos em busca de imóveis residenciais ou comerciais de diferentes faixas de renda.</li>
+  <li><b>Corretores de Imóveis:</b> profissionais devidamente credenciados no CRECI que atuam na captação, atendimento a leads e intermediação comercial.</li>
+  <li><b>Administradores da Imobiliária:</b> gestores responsáveis pelo controle operacional, supervisão da equipe de vendas e acompanhamento de métricas do negócio.</li>
+</ul>
+
+<h2>6. Objetivo Geral do Sistema</h2>
+<p>Desenvolver um sistema web orientado a objetos que integre simulação de financiamento imobiliário, gestão de imóveis e agendamento de visitas, proporcionando uma experiência fluida e inteligente para compradores e corretores, otimizando o processo de compra e reduzindo o tempo operacional envolvido em cada etapa.</p>
+
+<h2>7. Justificativa para a Escolha do Tema</h2>
+<p>O tema foi escolhido por solucionar um problema real de assimetria de informações e ineficiência operacional no mercado imobiliário. Além da relevância comercial, o projeto apresenta a complexidade ideal para a aplicação prática e aprofundada dos conceitos de Orientação a Objetos, exigindo estruturação de herança de usuários, composição de endereços, interações entre objetos e controle de estados (como o ciclo de vida de um agendamento), garantindo um sistema com processos de negócio robustos que superam simples telas de cadastro isoladas.</p>
+
+<h2>8. Principais Funcionalidades</h2>
+<h3>8.1 Para Clientes (Compradores)</h3>
+<ul>
+  <li><b>F01</b> - Realizar cadastro no sistema com dados pessoais e financeiros.</li>
+  <li><b>F02</b> - Realizar login e logout no sistema de forma segura.</li>
+  <li><b>F03</b> - Realizar simulação de financiamento informando renda, idade e valor de entrada.</li>
+  <li><b>F04</b> - Visualizar lista de imóveis compatíveis com sua capacidade de compra.</li>
+  <li><b>F05</b> - Visualizar detalhes completos de um imóvel (fotos, características, endereço).</li>
+  <li><b>F06</b> - Solicitar agendamento de visita presencial a um imóvel.</li>
+  <li><b>F07</b> - Visualizar histórico completo de simulações realizadas.</li>
+  <li><b>F08</b> - Visualizar status dos agendamentos de visita (pendente, confirmado, realizado, cancelado).</li>
+  <li><b>F09</b> - Editar dados cadastrais e preferências de busca.</li>
+  <li><b>F10</b> - Filtrar imóveis por tipo, número de quartos e banheiros.</li>
+  <li><b>F11</b> - Salvar imóveis favoritos para consulta e comparação rápida.</li>
+  <li><b>F12</b> - Receber notificações sobre novos imóveis compatíveis com seu perfil.</li>
+</ul>
+<h3>8.2 Para Corretores</h3>
+<ul>
+  <li><b>F13</b> - Realizar cadastro profissional no sistema com validação do registro CRECI.</li>
+  <li><b>F14</b> - Cadastrar novos imóveis com especificações técnicas detalhadas e fotos.</li>
+  <li><b>F15</b> - Editar e atualizar dados de imóveis cadastrados.</li>
+  <li><b>F16</b> - Inativar ou excluir imóveis (quando vendidos ou retirados do portfólio).</li>
+  <li><b>F17</b> - Visualizar dashboard gerencial com imóveis cadastrados sob sua responsabilidade.</li>
+  <li><b>F18</b> - Visualizar e gerenciar solicitações de visita recebidas.</li>
+  <li><b>F19</b> - Confirmar, reagendar ou cancelar visitas solicitadas.</li>
+  <li><b>F20</b> - Visualizar perfil e dados de contato dos clientes que solicitaram visitas.</li>
+  <li><b>F21</b> - Marcar imóvel como vendido e registrar fechamento de proposta.</li>
+  <li><b>F22</b> - Pesquisar imóveis no portfólio geral por critérios técnicos e mercadológicos.</li>
+</ul>
+<h3>8.3 Para Administradores</h3>
+<ul>
+  <li><b>F23</b> - Gerenciar contas de todos os usuários do sistema (clientes, corretores e operadores).</li>
+  <li><b>F24</b> - Visualizar e exportar relatórios gerenciais (vendas, visitas e engajamento).</li>
+  <li><b>F25</b> - Gerenciar corretores e moderar credenciais (ativo/inativo).</li>
+  <li><b>F26</b> - Visualizar visão geral e auditoria de todos os imóveis cadastrados.</li>
+  <li><b>F27</b> - Acompanhar métricas de desempenho do negócio (taxa de conversão, ticket médio etc.).</li>
+</ul>
+
+<h2>9. Descrição do Processo Principal</h2>
+<p>O cliente acessa o sistema, realiza uma simulação de financiamento com base em seus dados socioeconômicos e obtém uma lista de imóveis estritamente compatíveis com seu orçamento. Em seguida, o cliente seleciona os imóveis de interesse e solicita uma visita presencial. O corretor responsável pelo imóvel recebe a solicitação em seu painel, confirma a data e o horário, e realiza o atendimento. Após a visita, o corretor atualiza o status no sistema, registrando a evolução da negociação ou o fechamento da venda.</p>
+
+<h2>10. Conceitos de POO Aplicados (Identificação Inicial)</h2>
+<table>
+  <tr><th style="width:18%">Objeto / Classe</th><th style="width:16%">Tipo / Relação</th><th>Descrição e Responsabilidade</th></tr>
+  <tr><td>Usuario</td><td>Superclasse</td><td>Entidade base com acesso ao sistema, contendo dados de identificação e autenticação.</td></tr>
+  <tr><td>Cliente</td><td>Subclasse</td><td>Representa o comprador; armazena atributos como renda mensal, idade e patrimônio.</td></tr>
+  <tr><td>Corretor</td><td>Subclasse</td><td>Representa o profissional imobiliário; encapsula registro CRECI e agenda de visitas.</td></tr>
+  <tr><td>Administrador</td><td>Subclasse</td><td>Gestão da plataforma com permissões de auditoria e emissão de relatórios.</td></tr>
+  <tr><td>Imovel</td><td>Entidade</td><td>Propriedade para venda, contendo especificações técnicas, preço e status.</td></tr>
+  <tr><td>Endereco</td><td>Composição</td><td>Encapsula os dados de geolocalização pertencentes ao imóvel.</td></tr>
+  <tr><td>Simulacao</td><td>Entidade</td><td>Registra os parâmetros informados e os resultados calculados da capacidade de compra.</td></tr>
+  <tr><td>Financiamento</td><td>Associação</td><td>Modela variáveis como taxa de juros, prazo em meses e sistema de amortização.</td></tr>
+  <tr><td>Agendamento</td><td>Associação</td><td>Compromisso que vincula Cliente, Corretor e Imóvel com controle de status e tempo.</td></tr>
+</table>
+<p class="nota">Observação: a classe Financiamento foi removida na Atividade 3; sua lógica foi incorporada ao cálculo da capacidade de compra.</p>
+
+<!-- ===================================================== ATIVIDADE 2 -->
+<div class="quebra"></div>
+<h1 class="atividade">Atividade 2 — Levantamento de Requisitos</h1>
+
+<h2>1. Requisitos Funcionais (RF)</h2>
+<p>Os requisitos funcionais definem as ações, comportamentos e serviços específicos que a plataforma LUNAR INTEL deve prover aos seus usuários, distribuídos pelos módulos do sistema.</p>
+
+<h3>1.1 Módulo de Autenticação e Controle de Acesso</h3>
+<table>
+  <tr><th style="width:12%">Código</th><th>Descrição do Requisito</th></tr>
+  <tr><td><b>RF01</b></td><td>Permitir o autocadastro de usuários mediante fornecimento de nome completo, e-mail, CPF, telefone e senha de acesso.</td></tr>
+  <tr><td><b>RF02</b></td><td>Autenticar o acesso de usuários por meio de credenciais válidas (e-mail e senha cadastrados).</td></tr>
+  <tr><td><b>RF03</b></td><td>Disponibilizar fluxo para recuperação de senha com envio de link/código de verificação por e-mail.</td></tr>
+  <tr><td><b>RF04</b></td><td>Permitir a atualização dos dados cadastrais pelo próprio usuário autenticado.</td></tr>
+  <tr><td><b>RF05</b></td><td>Possibilitar o encerramento ou inativação voluntária da conta pelo próprio usuário.</td></tr>
+</table>
+
+<h3>1.2 Módulo de Clientes e Compradores</h3>
+<table>
+  <tr><th style="width:12%">Código</th><th>Descrição do Requisito</th></tr>
+  <tr><td><b>RF06</b></td><td>Permitir o registro do perfil financeiro do cliente, englobando renda bruta mensal, idade e saldo disponível de entrada (poupança/FGTS).</td></tr>
+  <tr><td><b>RF07</b></td><td>Realizar a simulação de financiamento imobiliário calculando a capacidade máxima de aquisição com base nos dados informados.</td></tr>
+  <tr><td><b>RF08</b></td><td>Apresentar catálogo dinâmico de imóveis compatíveis com o teto financeiro calculado na simulação.</td></tr>
+  <tr><td><b>RF09</b></td><td>Exibir ficha técnica completa do imóvel selecionado, incluindo galeria de fotos, especificações estruturais, endereço e valor de venda.</td></tr>
+  <tr><td><b>RF10</b></td><td>Permitir o envio de solicitação de agendamento de visita presencial para um imóvel selecionado.</td></tr>
+  <tr><td><b>RF11</b></td><td>Manter histórico acessível das simulações financeiras realizadas pelo cliente.</td></tr>
+  <tr><td><b>RF12</b></td><td>Disponibilizar painel de acompanhamento de status das visitas (Pendente, Confirmada, Realizada, Cancelada).</td></tr>
+  <tr><td><b>RF13</b></td><td>Permitir a aplicação de filtros de busca por tipologia (casa, apartamento, loft), dormitórios, banheiros e localização.</td></tr>
+  <tr><td><b>RF14</b></td><td>Permitir ao cliente favoritar imóveis de interesse para acesso rápido posterior.</td></tr>
+  <tr><td><b>RF15</b></td><td>Possibilitar a remoção de imóveis previamente salvos na lista de favoritos.</td></tr>
+</table>
+
+<h3>1.3 Módulo de Corretores e Gestão de Portfólio</h3>
+<table>
+  <tr><th style="width:12%">Código</th><th>Descrição do Requisito</th></tr>
+  <tr><td><b>RF16</b></td><td>Permitir o credenciamento de corretores mediante validação estrutural do número de registro profissional no CRECI.</td></tr>
+  <tr><td><b>RF17</b></td><td>Permitir a inclusão de novos imóveis com especificações técnicas, descritivo comercial, fotos e precificação.</td></tr>
+  <tr><td><b>RF18</b></td><td>Permitir a edição completa de dados e mídias dos imóveis pertencentes ao portfólio do próprio corretor.</td></tr>
+  <tr><td><b>RF19</b></td><td>Possibilitar a inativação ou remoção de imóveis quando negociados ou retirados de comercialização.</td></tr>
+  <tr><td><b>RF20</b></td><td>Disponibilizar dashboard individual com métricas de desempenho, estoque de unidades e volume de visitas recebidas.</td></tr>
+  <tr><td><b>RF21</b></td><td>Listar as solicitações de visita recebidas de clientes para os imóveis vinculados ao corretor.</td></tr>
+  <tr><td><b>RF22</b></td><td>Permitir a confirmação, proposta de reagendamento ou cancelamento fundamentado de visitas solicitadas.</td></tr>
+  <tr><td><b>RF23</b></td><td>Permitir a visualização do perfil de contato e informações essenciais dos clientes solicitantes de visita.</td></tr>
+  <tr><td><b>RF24</b></td><td>Possibilitar a alteração do status do imóvel para "Vendido", formalizando o encerramento do ciclo de captação.</td></tr>
+  <tr><td><b>RF25</b></td><td>Disponibilizar mecanismo de busca avançada e ordenação sobre a base de imóveis do portfólio.</td></tr>
+</table>
+
+<h3>1.4 Módulo Administrativo e Gerencial</h3>
+<table>
+  <tr><th style="width:12%">Código</th><th>Descrição do Requisito</th></tr>
+  <tr><td><b>RF26</b></td><td>Permitir a administração e supervisão global de todas as contas de usuários cadastradas no sistema.</td></tr>
+  <tr><td><b>RF27</b></td><td>Gerenciar o status de habilitação (ativação/bloqueio) das contas operacionais de corretores.</td></tr>
+  <tr><td><b>RF28</b></td><td>Gerar e exibir relatórios consolidados de vendas, conversão de visitas e produtividade da equipe comercial.</td></tr>
+  <tr><td><b>RF29</b></td><td>Prover visão integrada de todos os imóveis cadastrados em nível institucional.</td></tr>
+  <tr><td><b>RF30</b></td><td>Apresentar indicadores executivos globais, incluindo taxa média de conversão e ticket médio de transações.</td></tr>
+</table>
+
+<h2>2. Requisitos Não Funcionais (RNF)</h2>
+<p>Os requisitos não funcionais estabelecem os critérios de qualidade, restrições arquiteturais, desempenho e segurança adotados no desenvolvimento da solução.</p>
+<table>
+  <tr><th style="width:12%">Código</th><th style="width:20%">Categoria</th><th>Descrição do Requisito</th></tr>
+  <tr><td><b>RNF01</b></td><td>Usabilidade / Interface</td><td>A interface deve ser totalmente responsiva, adaptando-se de forma fluida a computadores desktop, tablets e smartphones.</td></tr>
+  <tr><td><b>RNF02</b></td><td>Desempenho</td><td>O tempo de resposta para operações comuns (consultas, filtros e simulações) não deve exceder 3 segundos em condições normais de uso.</td></tr>
+  <tr><td><b>RNF03</b></td><td>Segurança</td><td>Senhas devem ser persistidas exclusivamente sob formato de hash criptográfico seguro (e.g., BCrypt/Argon2), garantindo a proteção a dados sensíveis.</td></tr>
+  <tr><td><b>RNF04</b></td><td>Arquitetura de Software</td><td>A implementação deve obedecer aos princípios e boas práticas da Programação Orientada a Objetos (POO), com divisão clara de responsabilidades em pacotes e camadas.</td></tr>
+  <tr><td><b>RNF05</b></td><td>Persistência de Dados</td><td>A retenção de dados deve ser garantida via serialização estruturada em JSON ou banco de dados relacional (SQL).</td></tr>
+  <tr><td><b>RNF06</b></td><td>Tratamento de Exceções</td><td>O sistema deve apresentar mensagens de erro amigáveis ao usuário, suprimindo stacktraces ou detalhes internos de infraestrutura.</td></tr>
+  <tr><td><b>RNF07</b></td><td>Auditoria e Rastreabilidade</td><td>Eventos críticos (cadastros, alterações de status e autenticações) devem gerar logs de auditoria contendo carimbo temporal e identificador do ator.</td></tr>
+  <tr><td><b>RNF08</b></td><td>Portabilidade</td><td>Compatibilidade plena com as versões estáveis dos principais navegadores de mercado (Google Chrome, Mozilla Firefox, Microsoft Edge e Apple Safari).</td></tr>
+</table>
+
+<h2>3. Regras de Negócio (RN)</h2>
+<p>As regras de negócio descrevem as políticas, validações e restrições operacionais que regem o comportamento da aplicação.</p>
+<table>
+  <tr><th style="width:12%">Código</th><th>Enunciado da Regra de Negócio</th></tr>
+  <tr><td><b>RN01</b></td><td><b>Comprometimento de Renda:</b> o valor estimado da parcela do financiamento não pode ultrapassar o limite de 30% da renda mensal bruta comprovada pelo cliente.</td></tr>
+  <tr><td><b>RN02</b></td><td><b>Conclusão de Venda:</b> a transição de um imóvel para o status "Vendido" exige que todos os seus agendamentos vinculados estejam previamente concluídos ("Realizado") ou arquivados ("Cancelado").</td></tr>
+  <tr><td><b>RN03</b></td><td><b>Disponibilidade para Visita:</b> visitas somente podem ser solicitadas ou confirmadas para imóveis em estado estritamente "Disponível".</td></tr>
+  <tr><td><b>RN04</b></td><td><b>Limite de Agendamentos Simultâneos:</b> um mesmo cliente não pode manter simultaneamente mais de 3 solicitações de visita ativas (pendentes ou confirmadas), considerando todos os imóveis.*</td></tr>
+  <tr><td><b>RN05</b></td><td><b>Faixa Etária de Simulação:</b> a simulação de financiamento exige idade mínima de 18 anos e idade máxima de 70 anos (considerando a limitação do prazo de amortização bancária).</td></tr>
+  <tr><td><b>RN06</b></td><td><b>Isolamento de Responsabilidade:</b> um corretor possui prerrogativa de alteração e exclusão exclusivamente sobre os imóveis cadastrados sob sua própria titularidade.</td></tr>
+  <tr><td><b>RN07</b></td><td><b>Segregação de Papéis Administrativos:</b> contas com perfil de Administrador exercem exclusivamente atribuições gerenciais, de parametrização e auditoria, sendo vedada a intermediação direta de visitas.</td></tr>
+  <tr><td><b>RN08</b></td><td><b>Proporção Máxima de Entrada:</b> o montante de recursos próprios (Poupança/FGTS) aportado como entrada na simulação é limitado a 80% do valor de avaliação do bem.</td></tr>
+  <tr><td><b>RN09</b></td><td><b>Intervalo Mínimo de Recorrência:</b> é bloqueada a abertura de novo agendamento para o mesmo imóvel caso o cliente possua visita em aberto ou agendada nos últimos 7 dias.</td></tr>
+  <tr><td><b>RN10</b></td><td><b>Notificação de Eventos:</b> qualquer alteração de status em visitas dispara notificações automáticas e simultâneas ao cliente interessado e ao corretor encarregado.</td></tr>
+  <tr><td><b>RN11</b></td><td><b>Validação do Registro CRECI:</b> o cadastro profissional de corretores requer validação do formato do registro CRECI: número de 4 a 6 dígitos, hífen e sufixo de 1 ou 2 letras (ex.: 12345-F).*</td></tr>
+  <tr><td><b>RN12</b></td><td><b>Visibilidade de Imóveis Inativos:</b> imóveis inativados ou despublicados são omitidos de forma irrestrita dos mecanismos de busca e recomendações da simulação.</td></tr>
+</table>
+<p class="nota">* Redação revisada na implementação. A versão anterior da RN04 limitava as visitas "para a mesma unidade imobiliária", o que nunca seria atingido, pois a RN09 já impede uma segunda visita em aberto ao mesmo imóvel. A RN11 citava "sufixo numérico", mas o padrão do CRECI usa sufixo de letra.</p>
+
+<h2>4. Perfis de Usuários e Níveis de Acesso</h2>
+<h3>4.1 Perfil: Cliente (Comprador)</h3>
+<p><b>Descrição:</b> usuário final interessado na aquisição de imóveis residenciais ou comerciais. Utiliza o sistema para qualificação de crédito, busca personalizada e contato comercial.</p>
+<p><b>Atribuições Principais:</b> realização de simulações de financiamento; navegação em catálogo qualificado; gestão de imóveis favoritos; solicitação de visitas presenciais.</p>
+<p><b>Permissões Concedidas:</b> cadastro/login; edição de dados cadastrais próprios (exceto CPF); inativação de conta própria; visualização pública do portfólio; envio de solicitações de visita; consulta ao próprio histórico financeiro.</p>
+<p><b>Restrições:</b> sem acesso a registros de terceiros, painéis gerenciais ou operações de inclusão/edição de imóveis.</p>
+
+<h3>4.2 Perfil: Corretor de Imóveis</h3>
+<p><b>Descrição:</b> profissional imobiliário devidamente credenciado junto ao CRECI, responsável pela prospecção de propriedades e condução do relacionamento com potenciais compradores.</p>
+<p><b>Atribuições Principais:</b> cadastro e manutenção de imóveis; gestão de agenda de visitas; atendimento e triagem de leads qualificados.</p>
+<p><b>Permissões Concedidas:</b> gestão de anúncios próprios (CRUD completo); recebimento e tratamento de propostas de agendamento; visualização de métricas individuais de captação; alteração de disponibilidade e status de venda.</p>
+<p><b>Restrições:</b> não possui permissão para editar anúncios de outros corretores, intervir em configurações gerais do sistema ou realizar simulações em nome de clientes.</p>
+
+<h3>4.3 Perfil: Administrador</h3>
+<p><b>Descrição:</b> gestor responsável pela governança da plataforma, moderação de contas, segurança operacional e extração de inteligência de mercado.</p>
+<p><b>Atribuições Principais:</b> supervisão de acessos; análise de indicadores estratégicos; manutenção da integridade da base cadastral e auditoria técnica.</p>
+<p><b>Permissões Concedidas:</b> gestão de contas de usuários (ativação, suspensão e exclusão); acesso aos relatórios consolidados de vendas e conversão; visualização global do catálogo; inspeção de logs do sistema.</p>
+<p><b>Restrições:</b> não participa da operação direta de agendamento de visitas nem atua como intermediário nas negociações.</p>
+
+<h2>5. Descrição do Processo Principal de Negócio</h2>
+<p>O fluxo primordial do LUNAR INTEL compreende o ciclo integrado de qualificação financeira, recomendação orientada a dados e agendamento de visitas. A integração entre as etapas garante eficiência operacional à imobiliária e assertividade aos clientes.</p>
+<ol>
+  <li><b>Autenticação e Registro do Comprador:</b> o cliente realiza o acesso à plataforma e informa suas diretrizes socioeconômicas (renda, capacidade de entrada e idade).</li>
+  <li><b>Simulação e Cálculo de Capacidade:</b> o motor de simulação calcula o montante de financiamento exequível com base na restrição de 30% da renda mensal bruta (RN01) e nos limites de idade (RN05).</li>
+  <li><b>Filtragem e Apresentação do Portfólio:</b> o catálogo de imóveis disponíveis é filtrado dinamicamente para apresentar exclusivamente opções compatíveis com o teto financeiro apurado.</li>
+  <li><b>Inspeção de Detalhes do Imóvel:</b> o cliente analisa as características estruturais, fotos e localização da unidade selecionada.</li>
+  <li><b>Requisição de Agendamento:</b> o cliente sugere datas e horários convenientes para visita, passando pelas validações de recorrência e status do imóvel (RN03, RN04, RN09).</li>
+  <li><b>Tratamento e Confirmação pelo Corretor:</b> o corretor titular recebe a notificação no painel de controle, analisa a viabilidade da agenda e confirma o compromisso, disparando aviso ao comprador e ao corretor (RN10).</li>
+  <li><b>Execução e Fechamento:</b> após a realização presencial, o corretor registra o evento no sistema e, em caso de êxito na negociação, assinala o imóvel como "Vendido" (RN02).</li>
+</ol>
+<h3>Fluxograma Textual da Jornada</h3>
+<div class="fluxo">
+[Acesso / Cadastro do Cliente]<br>&nbsp;&nbsp;│<br>&nbsp;&nbsp;▼<br>
+[Simulação Financeira (Renda, Idade, Entrada)]<br>&nbsp;&nbsp;│<br>&nbsp;&nbsp;▼<br>
+[Cálculo da Capacidade Máxima de Compra (RN01, RN05)]<br>&nbsp;&nbsp;│<br>&nbsp;&nbsp;▼<br>
+[Catálogo Filtrado por Compatibilidade Financeira]<br>&nbsp;&nbsp;│<br>&nbsp;&nbsp;▼<br>
+[Seleção de Imóvel e Solicitação de Visita]<br>&nbsp;&nbsp;│<br>&nbsp;&nbsp;▼<br>
+[Validação das Regras de Negócio (RN03, RN04, RN09)]<br>&nbsp;&nbsp;│<br>&nbsp;&nbsp;▼<br>
+[Notificação e Confirmação pelo Corretor Responsável (RN10)]<br>&nbsp;&nbsp;│<br>&nbsp;&nbsp;▼<br>
+[Realização da Visita Presencial]<br>&nbsp;&nbsp;│<br>&nbsp;&nbsp;▼<br>
+[Atualização de Status: Concluída / Negociação / Venda (RN02)]
+</div>
+
+<h2>6. Matriz de Rastreabilidade (Requisitos Funcionais vs. Perfis)</h2>
+<table>
+  <tr><th>Requisito Funcional</th><th>Cliente</th><th>Corretor</th><th>Administrador</th></tr>
+  <tr><td>RF01 — Cadastro de Usuários</td><td><b>Permitido</b></td><td><b>Permitido</b></td><td>Não se aplica</td></tr>
+  <tr><td>RF02 — Autenticação de Acesso</td><td><b>Permitido</b></td><td><b>Permitido</b></td><td><b>Permitido</b></td></tr>
+  <tr><td>RF03 — Recuperação de Senha</td><td><b>Permitido</b></td><td><b>Permitido</b></td><td>Não se aplica</td></tr>
+  <tr><td>RF04 — Edição de Dados Cadastrais</td><td><b>Permitido</b></td><td><b>Permitido</b></td><td><b>Permitido</b></td></tr>
+  <tr><td>RF05 — Encerramento de Conta</td><td><b>Permitido</b></td><td><b>Permitido</b></td><td>Não se aplica</td></tr>
+  <tr><td>RF06 a RF15 — Módulo Comprador</td><td><b>Permitido</b></td><td>Não se aplica</td><td>Não se aplica</td></tr>
+  <tr><td>RF16 a RF25 — Módulo Corretor</td><td>Não se aplica</td><td><b>Permitido</b></td><td>Não se aplica</td></tr>
+  <tr><td>RF26 a RF30 — Módulo Administrativo</td><td>Não se aplica</td><td>Não se aplica</td><td><b>Permitido</b></td></tr>
+</table>
+
+<h2>7. Considerações Finais</h2>
+<p>A especificação dos requisitos do projeto LUNAR INTEL consolida a transição do entendimento do problema para a fase de modelagem orientada a objetos. Os principais resultados alcançados compreendem:</p>
+<ul>
+  <li><b>Abstração e Domínio do Negócio:</b> mapeamento preciso das entidades, serviços e integrações necessárias para suportar a simulação e o fluxo comercial.</li>
+  <li><b>Segregação de Responsabilidades:</b> definição inequívoca dos limites de atuação entre clientes, corretores e administradores, estabelecendo bases para o modelo de segurança baseado em papéis (RBAC).</li>
+  <li><b>Rigor das Regras Operacionais:</b> formalização das diretrizes financeiras e de governança imobiliária que guiarão a camada de regras de negócio.</li>
+</ul>
+
+<!-- ===================================================== ATIVIDADE 3 -->
+<div class="quebra"></div>
+<h1 class="atividade">Atividade 3 — Identificação das Classes</h1>
+
+<h2>1. Introdução</h2>
+<p>Com base no levantamento de requisitos realizado na Atividade 2, esta etapa tem como objetivo identificar as principais classes do sistema LUNAR INTEL. As classes foram definidas a partir da abstração do domínio imobiliário, considerando os perfis de usuários, as entidades envolvidas no processo principal e as regras de negócio estabelecidas. Foram identificadas <b>10 classes principais</b>, equilibrando completude e simplicidade.</p>
+<p class="nota">As tabelas desta atividade registram a modelagem inicial. As alterações feitas durante a implementação estão descritas na Atividade 4 (diagrama atualizado) e na seção de Implementação.</p>
+
+<h2>2. Lista de Classes Identificadas</h2>
+<table>
+  <tr><th style="width:8%">#</th><th>Classe</th><th>Tipo</th></tr>
+  <tr><td>1</td><td>Usuario</td><td>Superclasse (Abstrata)</td></tr>
+  <tr><td>2</td><td>Cliente</td><td>Subclasse de Usuario</td></tr>
+  <tr><td>3</td><td>Corretor</td><td>Subclasse de Usuario</td></tr>
+  <tr><td>4</td><td>Administrador</td><td>Subclasse de Usuario</td></tr>
+  <tr><td>5</td><td>Imovel</td><td>Entidade</td></tr>
+  <tr><td>6</td><td>Endereco</td><td>Classe de Composição</td></tr>
+  <tr><td>7</td><td>Simulacao</td><td>Entidade</td></tr>
+  <tr><td>8</td><td>Agendamento</td><td>Entidade</td></tr>
+  <tr><td>9</td><td>Favorito</td><td>Entidade Associativa</td></tr>
+  <tr><td>10</td><td>Notificacao</td><td>Entidade</td></tr>
+</table>
+
+<h2>3. Descrição Detalhada das Classes</h2>
+
+<h3>3.1 Classe Usuario (Superclasse Abstrata)</h3>
+<p><b>Finalidade:</b> representar qualquer pessoa que acessa o sistema, servindo como base para a hierarquia de herança das classes Cliente, Corretor e Administrador.<br><b>Responsabilidade:</b> gerenciar informações básicas de identificação, autenticação e controle de acesso.</p>
+<table>
+  <tr><th>Atributo</th><th>Tipo</th><th>Descrição</th></tr>
+  <tr><td>id</td><td>int</td><td>Identificador único do usuário</td></tr>
+  <tr><td>nome</td><td>String</td><td>Nome completo do usuário</td></tr>
+  <tr><td>email</td><td>String</td><td>E-mail para login e contato</td></tr>
+  <tr><td>cpf</td><td>String</td><td>Cadastro de Pessoa Física</td></tr>
+  <tr><td>telefone</td><td>String</td><td>Número de telefone</td></tr>
+  <tr><td>senha</td><td>String</td><td>Hash da senha de acesso</td></tr>
+  <tr><td>dataCadastro</td><td>LocalDateTime</td><td>Data e hora do cadastro</td></tr>
+  <tr><td>ativo</td><td>boolean</td><td>Indica se a conta está ativa</td></tr>
+</table>
+<table>
+  <tr><th>Método</th><th>Retorno</th><th>Parâmetros</th><th>Descrição</th></tr>
+  <tr><td>autenticar()</td><td>boolean</td><td>String email, String senha</td><td>Verifica as credenciais</td></tr>
+  <tr><td>atualizarDados()</td><td>void</td><td>Usuario dadosAtualizados</td><td>Atualiza informações</td></tr>
+  <tr><td>alterarSenha()</td><td>void</td><td>String senhaAntiga, String senhaNova</td><td>Troca de senha</td></tr>
+  <tr><td>inativarConta()</td><td>void</td><td>-</td><td>Inativa a conta</td></tr>
+</table>
+
+<h3>3.2 Classe Cliente (Subclasse de Usuario)</h3>
+<p><b>Finalidade:</b> representar o comprador de imóveis, estendendo a classe Usuario com atributos financeiros específicos.<br><b>Responsabilidade:</b> gerenciar dados financeiros, simulações realizadas, favoritos e agendamentos do comprador.</p>
+<table>
+  <tr><th>Atributo</th><th>Tipo</th><th>Descrição</th></tr>
+  <tr><td>rendaMensal</td><td>double</td><td>Renda bruta mensal declarada</td></tr>
+  <tr><td>idade</td><td>int</td><td>Idade do cliente (18 a 70 anos)</td></tr>
+  <tr><td>poupanca</td><td>double</td><td>Saldo disponível para entrada</td></tr>
+  <tr><td>fgts</td><td>double</td><td>Saldo do FGTS disponível</td></tr>
+  <tr><td>profissao</td><td>String</td><td>Profissão do cliente</td></tr>
+</table>
+<table>
+  <tr><th>Método</th><th>Retorno</th><th>Parâmetros</th><th>Descrição</th></tr>
+  <tr><td>calcularCapacidadeCompra()</td><td>double</td><td>-</td><td>Calcula o valor máximo do imóvel (RN01)</td></tr>
+  <tr><td>obterParcelaMaxima()</td><td>double</td><td>-</td><td>Calcula 30% da renda mensal</td></tr>
+  <tr><td>validarIdade()</td><td>boolean</td><td>-</td><td>Verifica idade entre 18 e 70 anos (RN05)</td></tr>
+  <tr><td>getValorEntradaTotal()</td><td>double</td><td>-</td><td>Retorna poupança + FGTS</td></tr>
+  <tr><td>listarFavoritos()</td><td>List&lt;Imovel&gt;</td><td>-</td><td>Retorna imóveis favoritos</td></tr>
+  <tr><td>listarSimulacoes()</td><td>List&lt;Simulacao&gt;</td><td>-</td><td>Retorna histórico de simulações</td></tr>
+</table>
+
+<h3>3.3 Classe Corretor (Subclasse de Usuario)</h3>
+<p><b>Finalidade:</b> representar o profissional imobiliário credenciado no CRECI, responsável pela gestão de imóveis e atendimento aos clientes.<br><b>Responsabilidade:</b> gerenciar portfólio de imóveis, receber e tratar solicitações de visita.</p>
+<table>
+  <tr><th>Atributo</th><th>Tipo</th><th>Descrição</th></tr>
+  <tr><td>creci</td><td>String</td><td>Número de registro no CRECI</td></tr>
+  <tr><td>especialidade</td><td>String</td><td>Área de atuação</td></tr>
+  <tr><td>totalVendas</td><td>int</td><td>Quantidade de vendas realizadas</td></tr>
+  <tr><td>comissaoPercentual</td><td>double</td><td>Percentual de comissão</td></tr>
+</table>
+<table>
+  <tr><th>Método</th><th>Retorno</th><th>Parâmetros</th><th>Descrição</th></tr>
+  <tr><td>cadastrarImovel()</td><td>Imovel</td><td>Imovel imovel</td><td>Cadastra novo imóvel</td></tr>
+  <tr><td>editarImovel()</td><td>void</td><td>Imovel imovel</td><td>Edita imóvel existente</td></tr>
+  <tr><td>inativarImovel()</td><td>void</td><td>int idImovel</td><td>Inativa um imóvel</td></tr>
+  <tr><td>listarImoveis()</td><td>List&lt;Imovel&gt;</td><td>-</td><td>Retorna todos os imóveis do corretor</td></tr>
+  <tr><td>confirmarVisita()</td><td>Agendamento</td><td>int idAgendamento</td><td>Confirma uma visita</td></tr>
+  <tr><td>reagendarVisita()</td><td>Agendamento</td><td>int idAgendamento, LocalDateTime novaData</td><td>Reagenda visita</td></tr>
+  <tr><td>cancelarVisita()</td><td>void</td><td>int idAgendamento, String motivo</td><td>Cancela visita</td></tr>
+  <tr><td>marcarImovelVendido()</td><td>void</td><td>int idImovel, double valorVenda</td><td>Marca imóvel como vendido (RN02)</td></tr>
+  <tr><td>validarCRECI()</td><td>boolean</td><td>String creci</td><td>Valida formato do CRECI (RN11)</td></tr>
+</table>
+
+<h3>3.4 Classe Administrador (Subclasse de Usuario)</h3>
+<p><b>Finalidade:</b> representar o gestor da plataforma, com permissões de auditoria, gestão de usuários e acesso a relatórios gerenciais.<br><b>Responsabilidade:</b> supervisionar a operação da plataforma e gerenciar usuários.</p>
+<table>
+  <tr><th>Atributo</th><th>Tipo</th><th>Descrição</th></tr>
+  <tr><td>nivelAcesso</td><td>String</td><td>Nível de acesso (SUPER, GERENCIAL)</td></tr>
+</table>
+<table>
+  <tr><th>Método</th><th>Retorno</th><th>Parâmetros</th><th>Descrição</th></tr>
+  <tr><td>gerenciarUsuarios()</td><td>void</td><td>int idUsuario, String acao</td><td>Ativa/inativa usuários</td></tr>
+  <tr><td>gerarRelatorioVendas()</td><td>String</td><td>Periodo periodo</td><td>Gera relatório de vendas</td></tr>
+  <tr><td>visualizarTodosImoveis()</td><td>List&lt;Imovel&gt;</td><td>-</td><td>Retorna todos os imóveis</td></tr>
+</table>
+
+<h3>3.5 Classe Imovel</h3>
+<p><b>Finalidade:</b> representar uma propriedade imobiliária disponível para venda.<br><b>Responsabilidade:</b> armazenar informações detalhadas do imóvel e seu relacionamento com o corretor.</p>
+<table>
+  <tr><th>Atributo</th><th>Tipo</th><th>Descrição</th></tr>
+  <tr><td>id</td><td>int</td><td>Identificador único</td></tr>
+  <tr><td>titulo</td><td>String</td><td>Título descritivo</td></tr>
+  <tr><td>descricao</td><td>String</td><td>Descrição completa</td></tr>
+  <tr><td>preco</td><td>double</td><td>Preço de venda</td></tr>
+  <tr><td>areaTotal</td><td>double</td><td>Área total em m²</td></tr>
+  <tr><td>quartos</td><td>int</td><td>Número de quartos</td></tr>
+  <tr><td>banheiros</td><td>int</td><td>Número de banheiros</td></tr>
+  <tr><td>tipo</td><td>String</td><td>Casa, Apartamento, Loft</td></tr>
+  <tr><td>status</td><td>String</td><td>Disponível, Vendido, Inativo</td></tr>
+  <tr><td>endereco</td><td>Endereco</td><td>Objeto Endereco (composição)</td></tr>
+  <tr><td>corretor</td><td>Corretor</td><td>Corretor responsável (associação)</td></tr>
+  <tr><td>imagens</td><td>List&lt;String&gt;</td><td>Lista de URLs das imagens</td></tr>
+</table>
+<table>
+  <tr><th>Método</th><th>Retorno</th><th>Parâmetros</th><th>Descrição</th></tr>
+  <tr><td>isDisponivel()</td><td>boolean</td><td>-</td><td>Verifica se está disponível</td></tr>
+  <tr><td>marcarComoVendido()</td><td>void</td><td>double valor</td><td>Marca como vendido (RN02)</td></tr>
+  <tr><td>inativar()</td><td>void</td><td>-</td><td>Inativa o imóvel (RN12)</td></tr>
+  <tr><td>atualizarPreco()</td><td>void</td><td>double novoPreco</td><td>Atualiza o preço</td></tr>
+  <tr><td>getDadosCompletos()</td><td>String</td><td>-</td><td>Retorna resumo completo</td></tr>
+</table>
+
+<h3>3.6 Classe Endereco</h3>
+<p><b>Finalidade:</b> representar a localização geográfica do imóvel, encapsulando todos os dados de endereço.<br><b>Responsabilidade:</b> armazenar e validar informações de endereço de forma padronizada.</p>
+<table>
+  <tr><th>Atributo</th><th>Tipo</th><th>Descrição</th></tr>
+  <tr><td>logradouro</td><td>String</td><td>Rua, avenida ou praça</td></tr>
+  <tr><td>numero</td><td>String</td><td>Número do imóvel</td></tr>
+  <tr><td>complemento</td><td>String</td><td>Complemento (apto, bloco etc.)</td></tr>
+  <tr><td>bairro</td><td>String</td><td>Bairro</td></tr>
+  <tr><td>cidade</td><td>String</td><td>Cidade</td></tr>
+  <tr><td>estado</td><td>String</td><td>Estado (UF)</td></tr>
+  <tr><td>cep</td><td>String</td><td>Código Postal</td></tr>
+</table>
+<table>
+  <tr><th>Método</th><th>Retorno</th><th>Parâmetros</th><th>Descrição</th></tr>
+  <tr><td>getEnderecoCompleto()</td><td>String</td><td>-</td><td>Retorna o endereço completo formatado</td></tr>
+  <tr><td>validarCEP()</td><td>boolean</td><td>String cep</td><td>Valida o formato do CEP</td></tr>
+</table>
+
+<h3>3.7 Classe Simulacao</h3>
+<p><b>Finalidade:</b> registrar uma simulação financeira realizada por um cliente.<br><b>Responsabilidade:</b> persistir o histórico de simulações e fornecer dados para análises.</p>
+<table>
+  <tr><th>Atributo</th><th>Tipo</th><th>Descrição</th></tr>
+  <tr><td>id</td><td>int</td><td>Identificador único</td></tr>
+  <tr><td>cliente</td><td>Cliente</td><td>Cliente que realizou (associação)</td></tr>
+  <tr><td>dataSimulacao</td><td>LocalDateTime</td><td>Data da simulação</td></tr>
+  <tr><td>rendaInformada</td><td>double</td><td>Renda informada</td></tr>
+  <tr><td>idadeInformada</td><td>int</td><td>Idade informada</td></tr>
+  <tr><td>entradaInformada</td><td>double</td><td>Entrada informada</td></tr>
+  <tr><td>capacidadeCompra</td><td>double</td><td>Valor máximo calculado (RN01)</td></tr>
+  <tr><td>imoveisEncontrados</td><td>List&lt;Imovel&gt;</td><td>Imóveis compatíveis</td></tr>
+</table>
+<table>
+  <tr><th>Método</th><th>Retorno</th><th>Parâmetros</th><th>Descrição</th></tr>
+  <tr><td>calcularCapacidade()</td><td>void</td><td>-</td><td>Calcula a capacidade de compra</td></tr>
+  <tr><td>getImoveisCompativeis()</td><td>List&lt;Imovel&gt;</td><td>List&lt;Imovel&gt; portfolio</td><td>Filtra imóveis compatíveis</td></tr>
+  <tr><td>getResumo()</td><td>String</td><td>-</td><td>Retorna resumo da simulação</td></tr>
+</table>
+
+<h3>3.8 Classe Agendamento</h3>
+<p><b>Finalidade:</b> representar o agendamento de uma visita presencial a um imóvel.<br><b>Responsabilidade:</b> gerenciar o ciclo de vida da visita.</p>
+<table>
+  <tr><th>Atributo</th><th>Tipo</th><th>Descrição</th></tr>
+  <tr><td>id</td><td>int</td><td>Identificador único</td></tr>
+  <tr><td>cliente</td><td>Cliente</td><td>Cliente solicitante (associação)</td></tr>
+  <tr><td>corretor</td><td>Corretor</td><td>Corretor responsável (associação)</td></tr>
+  <tr><td>imovel</td><td>Imovel</td><td>Imóvel a ser visitado (associação)</td></tr>
+  <tr><td>dataSolicitacao</td><td>LocalDateTime</td><td>Data da solicitação</td></tr>
+  <tr><td>dataVisita</td><td>LocalDateTime</td><td>Data e hora agendada</td></tr>
+  <tr><td>status</td><td>String</td><td>Pendente, Confirmado, Realizado, Cancelado</td></tr>
+  <tr><td>observacoes</td><td>String</td><td>Observações gerais</td></tr>
+</table>
+<table>
+  <tr><th>Método</th><th>Retorno</th><th>Parâmetros</th><th>Descrição</th></tr>
+  <tr><td>confirmar()</td><td>void</td><td>-</td><td>Confirma o agendamento</td></tr>
+  <tr><td>realizar()</td><td>void</td><td>-</td><td>Marca como realizada</td></tr>
+  <tr><td>cancelar()</td><td>void</td><td>String motivo</td><td>Cancela o agendamento</td></tr>
+  <tr><td>reagendar()</td><td>void</td><td>LocalDateTime novaData</td><td>Reagenda a visita</td></tr>
+  <tr><td>validarAgendamento()</td><td>boolean</td><td>-</td><td>Valida o agendamento (RN03, RN04, RN09)</td></tr>
+</table>
+
+<h3>3.9 Classe Favorito</h3>
+<p><b>Finalidade:</b> representar a relação de favoritismo entre um cliente e um imóvel.<br><b>Responsabilidade:</b> armazenar os imóveis que um cliente marcou como favorito.</p>
+<table>
+  <tr><th>Atributo</th><th>Tipo</th><th>Descrição</th></tr>
+  <tr><td>id</td><td>int</td><td>Identificador único</td></tr>
+  <tr><td>cliente</td><td>Cliente</td><td>Cliente que favoritou (associação)</td></tr>
+  <tr><td>imovel</td><td>Imovel</td><td>Imóvel favoritado (associação)</td></tr>
+  <tr><td>dataAdicao</td><td>LocalDateTime</td><td>Data em que foi adicionado</td></tr>
+</table>
+<table>
+  <tr><th>Método</th><th>Retorno</th><th>Parâmetros</th><th>Descrição</th></tr>
+  <tr><td>getCliente()</td><td>Cliente</td><td>-</td><td>Retorna o cliente</td></tr>
+  <tr><td>getImovel()</td><td>Imovel</td><td>-</td><td>Retorna o imóvel</td></tr>
+</table>
+
+<h3>3.10 Classe Notificacao</h3>
+<p><b>Finalidade:</b> representar notificações enviadas a usuários sobre eventos relevantes.<br><b>Responsabilidade:</b> registrar e gerenciar notificações para clientes e corretores.</p>
+<table>
+  <tr><th>Atributo</th><th>Tipo</th><th>Descrição</th></tr>
+  <tr><td>id</td><td>int</td><td>Identificador único</td></tr>
+  <tr><td>usuario</td><td>Usuario</td><td>Usuário destinatário (associação)</td></tr>
+  <tr><td>tipo</td><td>String</td><td>AGENDAMENTO, IMOVEL_NOVO, SISTEMA</td></tr>
+  <tr><td>titulo</td><td>String</td><td>Título da notificação</td></tr>
+  <tr><td>mensagem</td><td>String</td><td>Mensagem detalhada</td></tr>
+  <tr><td>lida</td><td>boolean</td><td>Indica se foi lida</td></tr>
+  <tr><td>dataEnvio</td><td>LocalDateTime</td><td>Data de envio</td></tr>
+</table>
+<table>
+  <tr><th>Método</th><th>Retorno</th><th>Parâmetros</th><th>Descrição</th></tr>
+  <tr><td>marcarComoLida()</td><td>void</td><td>-</td><td>Marca a notificação como lida</td></tr>
+  <tr><td>getTipo()</td><td>String</td><td>-</td><td>Retorna o tipo da notificação</td></tr>
+</table>
+
+<h2>4. Resumo dos Atributos e Métodos por Classe</h2>
+<table>
+  <tr><th>Classe</th><th>Atributos</th><th>Métodos</th></tr>
+  <tr><td>Usuario</td><td>8</td><td>4</td></tr>
+  <tr><td>Cliente</td><td>5 (+8 herdados)</td><td>6 (+4 herdados)</td></tr>
+  <tr><td>Corretor</td><td>4 (+8 herdados)</td><td>9 (+4 herdados)</td></tr>
+  <tr><td>Administrador</td><td>1 (+8 herdados)</td><td>3 (+4 herdados)</td></tr>
+  <tr><td>Imovel</td><td>12</td><td>5</td></tr>
+  <tr><td>Endereco</td><td>7</td><td>2</td></tr>
+  <tr><td>Simulacao</td><td>8</td><td>3</td></tr>
+  <tr><td>Agendamento</td><td>8</td><td>5</td></tr>
+  <tr><td>Favorito</td><td>4</td><td>2</td></tr>
+  <tr><td>Notificacao</td><td>7</td><td>2</td></tr>
+</table>
+<p><b>Total: 10 classes, 64 atributos, 41 métodos.</b></p>
+
+<h2>5. Mapeamento dos Conceitos de POO</h2>
+<table>
+  <tr><th style="width:25%">Conceito</th><th>Aplicação no Projeto</th></tr>
+  <tr><td><b>Herança</b></td><td>Cliente, Corretor e Administrador herdam de Usuario</td></tr>
+  <tr><td><b>Composição</b></td><td>Imovel possui Endereco</td></tr>
+  <tr><td><b>Associação</b></td><td>Agendamento associa Cliente, Corretor e Imovel</td></tr>
+  <tr><td><b>Abstração</b></td><td>Usuario é classe abstrata</td></tr>
+  <tr><td><b>Encapsulamento</b></td><td>O estado dos objetos é alterado apenas por métodos que validam a operação (ver implementação)</td></tr>
+  <tr><td><b>Responsabilidades</b></td><td>Cada classe possui um conjunto claro e coeso de atributos e métodos</td></tr>
+</table>
+
+<h2>6. Justificativa para o Meio-Termo</h2>
+<table>
+  <tr><th style="width:25%">Classe</th><th>Motivo da Inclusão / Remoção</th></tr>
+  <tr><td><b>Endereco</b></td><td>Classe de composição essencial, evita poluição da classe Imovel</td></tr>
+  <tr><td><b>Favorito</b></td><td>Permite rastrear data de favoritamento e facilita expansões futuras</td></tr>
+  <tr><td><b>Notificacao</b></td><td>Necessária para o requisito RF12 e a RN10</td></tr>
+  <tr><td><b>Financiamento</b></td><td>Removida (lógica incorporada ao cálculo da capacidade de compra)</td></tr>
+  <tr><td><b>Imagem</b></td><td>Removida (simplificada como List&lt;String&gt; imagens em Imovel)</td></tr>
+</table>
+
+<h2>7. Considerações Finais</h2>
+<p>A identificação das classes do sistema LUNAR INTEL com 10 classes oferece: <b>equilíbrio</b> (número suficiente para cobrir todos os requisitos), <b>completude</b> (inclui classes importantes como Endereco e Notificacao), <b>ausência de excessos</b> (evita classes desnecessárias como Imagem e Financiamento) e <b>prontidão</b> (estrutura adequada para a elaboração do diagrama de classes na Atividade 4).</p>
+
+<!-- ===================================================== ATIVIDADE 4 -->
+<div class="quebra"></div>
+<h1 class="atividade">Atividade 4 — Diagrama de Classes (atualizado)</h1>
+
+<h2>1. Diagrama de Classes</h2>
+<p>O diagrama de classes do LUNAR INTEL representa a estrutura estática do sistema, identificando as classes, atributos, métodos, tipos, modificadores de acesso, relacionamentos e multiplicidades definidos para o domínio imobiliário. Esta versão foi <b>atualizada para corresponder exatamente ao código implementado</b> (pasta <code>src/models</code>). As diferenças em relação à versão entregue na Atividade 4 estão listadas no item 2.</p>
+<p>O diagrama é apresentado na página seguinte, em orientação paisagem, para facilitar a leitura.</p>
+<div class="paisagem">
+<figure>
+  <img src="../diagrama-classes.png" alt="Diagrama de classes do LUNAR INTEL" style="max-height:16.2cm">
+  <figcaption>Figura 1 — Diagrama de classes do sistema LUNAR INTEL (versão atualizada). Legenda: + público, - privado, «static» método estático, triângulo vazado = herança, losango cheio = composição.</figcaption>
+</figure>
+</div>
+
+<h2>2. Atualizações em Relação à Versão Anterior</h2>
+<table>
+  <tr><th style="width:24%">Alteração</th><th>Motivo</th></tr>
+  <tr><td>Associações passam a ser guardadas por identificador (ex.: <code>clienteId</code>, <code>corretorId</code>, <code>imovelId</code>, <code>usuarioId</code>)</td><td>A persistência é feita em arquivos JSON. Guardar o identificador evita duplicar objetos inteiros em cada arquivo. Os relacionamentos e as multiplicidades continuam os mesmos.</td></tr>
+  <tr><td>Métodos que buscam ou gravam outros objetos foram para a camada de serviços</td><td><code>Corretor.cadastrarImovel()</code>, <code>confirmarVisita()</code>, <code>Administrador.gerenciarUsuarios()</code>, <code>Agendamento.validarAgendamento()</code>, <code>Cliente.listarFavoritos()</code>, <code>Usuario.autenticar()</code> e semelhantes precisam acessar vários repositórios. Eles foram implementados nos <i>services</i> (ex.: <code>ImovelService</code>, <code>AgendamentoService</code>, <code>AuthService</code>), para que as classes de domínio não dependam dos arquivos.</td></tr>
+  <tr><td><code>Simulacao.calcularCapacidade()</code> incorporado a <code>Cliente.calcularCapacidadeCompra()</code></td><td>O cálculo depende apenas dos dados do cliente (renda, idade, poupança e FGTS); a simulação registra o resultado.</td></tr>
+  <tr><td>Novos métodos de domínio</td><td><code>Usuario</code>: <code>reativarConta()</code>, <code>getResumoPerfil()</code>, <code>paraDadosPublicos()</code>, <code>normalizarCPF()</code>, <code>validarCPF()</code>, <code>validarEmail()</code>; <code>Corretor.registrarVenda()</code>; <code>Imovel</code>: <code>isVendido()</code>, <code>reativar()</code>, <code>validar()</code> e a sobrecarga de <code>atualizarPreco()</code>; <code>Agendamento</code>: <code>_transicionarPara()</code> (privado) e <code>estaAtivo()</code>.</td></tr>
+  <tr><td><code>Favorito.getCliente()/getImovel()</code> passam a <code>getClienteId()/getImovelId()</code></td><td>Consequência da associação por identificador.</td></tr>
+  <tr><td>Atributo <code>tipo</code> nas subclasses de Usuario</td><td>Indica o perfil (CLIENTE, CORRETOR, ADMINISTRADOR) e permite recriar o objeto da subclasse correta ao ler o arquivo JSON.</td></tr>
+</table>
+
+<h2>3. Descrição das Classes</h2>
+<p><b>Usuario (superclasse abstrata):</b> representa qualquer pessoa que acessa o sistema. Centraliza dados de identificação, autenticação e controle da conta. É a base da herança de Cliente, Corretor e Administrador e não pode ser instanciada diretamente.</p>
+<p><b>Cliente:</b> representa o comprador de imóveis. Acrescenta dados financeiros e pessoais utilizados nas simulações e calcula a própria capacidade de compra.</p>
+<p><b>Corretor:</b> representa o profissional imobiliário credenciado pelo CRECI, responsável pelo seu portfólio de imóveis e pelo tratamento das solicitações de visita.</p>
+<p><b>Administrador:</b> representa o gestor da plataforma, com permissões de gerenciamento de usuários, auditoria, visualização global de imóveis e geração de relatórios.</p>
+<p><b>Imovel:</b> representa uma propriedade imobiliária. Armazena características, preço, status, endereço, corretor responsável e imagens, além das operações de disponibilidade, venda, inativação e reajuste de preço.</p>
+<p><b>Endereco:</b> representa os dados de localização do imóvel. Foi modelada como composição, pois o endereço faz parte do imóvel e é criado junto com ele.</p>
+<p><b>Simulacao:</b> registra uma simulação financeira realizada pelo cliente, mantendo os dados informados, a capacidade de compra calculada e os imóveis compatíveis.</p>
+<p><b>Agendamento:</b> representa uma solicitação de visita e controla seu ciclo de vida (Pendente → Confirmado → Realizado, ou Cancelado), vinculando cliente, corretor e imóvel.</p>
+<p><b>Favorito:</b> representa a relação entre um cliente e um imóvel marcado como favorito, armazenando também a data de adição.</p>
+<p><b>Notificacao:</b> representa mensagens de eventos relevantes do sistema destinadas aos usuários, como alterações em agendamentos e novos imóveis compatíveis.</p>
+
+<h2>4. Justificativa dos Relacionamentos</h2>
+<p><b>Usuario — Cliente / Corretor / Administrador:</b> generalização/especialização. Cliente, Corretor e Administrador são especializações de Usuario e herdam seus dados e comportamentos básicos, diferenciando-se pelas responsabilidades específicas de cada perfil.</p>
+<p><b>Imovel — Endereco:</b> composição, porque o endereço é parte integrante do imóvel: é criado dentro do construtor de Imovel e não existe separadamente. Um imóvel possui um endereço.</p>
+<p><b>Corretor — Imovel:</b> associação, porque o corretor cadastra e é responsável pelos imóveis de seu portfólio. Um corretor pode possuir vários imóveis, e cada imóvel possui um corretor responsável.</p>
+<p><b>Cliente — Simulacao:</b> associação, porque cada simulação é realizada por um cliente. Um cliente pode realizar várias simulações ao longo do tempo.</p>
+<p><b>Simulacao — Imovel:</b> associação, porque a simulação sugere vários imóveis compatíveis com a capacidade de compra calculada, e um mesmo imóvel pode aparecer em diferentes simulações.</p>
+<p><b>Cliente — Agendamento:</b> associação, porque o cliente solicita visitas. Um cliente pode possuir vários agendamentos, e cada agendamento pertence a um cliente.</p>
+<p><b>Corretor — Agendamento:</b> associação, porque o corretor responsável recebe e gerencia as solicitações de visita. Um corretor pode tratar vários agendamentos, e cada agendamento está vinculado a um corretor.</p>
+<p><b>Imovel — Agendamento:</b> associação, porque o agendamento representa uma visita a um imóvel específico. Um imóvel pode receber vários agendamentos ao longo de sua comercialização.</p>
+<p><b>Cliente — Favorito:</b> associação, porque os favoritos registram quais imóveis foram salvos por cada cliente. Um cliente pode possuir vários favoritos.</p>
+<p><b>Imovel — Favorito:</b> associação, porque um imóvel pode ser favoritado por diferentes clientes, sendo cada registro de Favorito responsável por representar essa relação.</p>
+<p><b>Usuario — Notificacao:</b> associação, porque as notificações possuem um usuário destinatário. Um usuário pode receber várias notificações.</p>
+
+<h2>5. Explicação das Multiplicidades</h2>
+<table>
+  <tr><th style="width:30%">Relacionamento</th><th style="width:14%">Multiplicidade</th><th>Explicação</th></tr>
+  <tr><td>Usuario — Cliente / Corretor / Administrador</td><td>herança</td><td>A especialização indica que cada objeto das subclasses pertence à hierarquia de Usuario; não é uma associação com multiplicidade convencional.</td></tr>
+  <tr><td>Imovel — Endereco</td><td>1 : 1</td><td>Cada imóvel possui exatamente um endereço, e cada Endereco pertence ao imóvel que o compõe.</td></tr>
+  <tr><td>Corretor — Imovel</td><td>1 : 0..*</td><td>Um corretor pode ter nenhum ou vários imóveis; cada imóvel possui um corretor responsável.</td></tr>
+  <tr><td>Cliente — Simulacao</td><td>1 : 0..*</td><td>Um cliente pode não ter simulações ou ter várias; cada simulação pertence a um cliente.</td></tr>
+  <tr><td>Simulacao — Imovel</td><td>0..* : 0..*</td><td>Uma simulação pode sugerir nenhum ou vários imóveis, e um imóvel pode aparecer em várias simulações.</td></tr>
+  <tr><td>Cliente — Agendamento</td><td>1 : 0..*</td><td>Um cliente pode ter nenhum ou vários agendamentos; cada agendamento pertence a um cliente.</td></tr>
+  <tr><td>Corretor — Agendamento</td><td>1 : 0..*</td><td>Um corretor pode gerenciar nenhum ou vários agendamentos; cada agendamento possui um corretor responsável.</td></tr>
+  <tr><td>Imovel — Agendamento</td><td>1 : 0..*</td><td>Um imóvel pode ter nenhum ou vários agendamentos; cada agendamento refere-se a um imóvel.</td></tr>
+  <tr><td>Cliente — Favorito</td><td>1 : 0..*</td><td>Um cliente pode não ter favoritos ou ter vários; cada favorito pertence a um cliente.</td></tr>
+  <tr><td>Imovel — Favorito</td><td>1 : 0..*</td><td>Um imóvel pode não ter favoritos ou ser favoritado por vários clientes; cada favorito refere-se a um imóvel.</td></tr>
+  <tr><td>Usuario — Notificacao</td><td>1 : 0..*</td><td>Um usuário pode receber nenhuma ou várias notificações; cada notificação possui um destinatário.</td></tr>
+</table>
+
+<h2>6. Conceitos de POO Representados no Diagrama</h2>
+<ul>
+  <li><b>Herança:</b> Cliente, Corretor e Administrador são especializações de Usuario.</li>
+  <li><b>Abstração:</b> Usuario é superclasse abstrata (o construtor impede a criação de um Usuario direto).</li>
+  <li><b>Composição:</b> Imovel possui Endereco como parte de sua estrutura.</li>
+  <li><b>Associação:</b> as entidades se relacionam para representar simulação, favoritamento, agendamento, gestão de imóveis e notificações.</li>
+  <li><b>Polimorfismo:</b> <code>getResumoPerfil()</code> é definido em Usuario e sobrescrito em Cliente, Corretor e Administrador.</li>
+  <li><b>Sobrecarga:</b> <code>Imovel.atualizarPreco()</code> aparece com duas assinaturas.</li>
+  <li><b>Encapsulamento:</b> em JavaScript os atributos são públicos (+), mas as mudanças de estado passam por métodos que validam a operação: o status de um Agendamento só muda por <code>confirmar()</code>, <code>realizar()</code> e <code>cancelar()</code>, que usam o método privado (-) <code>_transicionarPara()</code>; <code>paraDadosPublicos()</code> oculta o hash da senha.</li>
+  <li><b>Métodos estáticos:</b> validações que não dependem de um objeto (<code>validarCPF</code>, <code>validarEmail</code>, <code>validarCRECI</code>, <code>validarCEP</code>).</li>
+</ul>
+
+<h2>7. Relação com as Regras de Negócio</h2>
+<table>
+  <tr><th style="width:10%">Regra</th><th>Onde está implementada</th></tr>
+  <tr><td>RN01</td><td><code>Cliente.obterParcelaMaxima()</code> e <code>Cliente.calcularCapacidadeCompra()</code></td></tr>
+  <tr><td>RN02</td><td><code>ImovelService.marcarComoVendido()</code> verifica as visitas em aberto; <code>Imovel.marcarComoVendido()</code> muda o status</td></tr>
+  <tr><td>RN03</td><td><code>Imovel.isDisponivel()</code>, verificado em <code>AgendamentoService.solicitar()</code> e <code>confirmar()</code></td></tr>
+  <tr><td>RN04</td><td><code>AgendamentoService.solicitar()</code>, usando <code>Agendamento.estaAtivo()</code></td></tr>
+  <tr><td>RN05</td><td><code>Cliente.validarIdade()</code></td></tr>
+  <tr><td>RN06</td><td><code>ImovelService._verificarTitularidade()</code></td></tr>
+  <tr><td>RN07</td><td>Rotas de agendamento aceitam apenas os perfis CLIENTE e CORRETOR (<code>requireRole</code>)</td></tr>
+  <tr><td>RN08</td><td><code>Simulacao.getImoveisCompativeis()</code></td></tr>
+  <tr><td>RN09</td><td><code>AgendamentoService.solicitar()</code></td></tr>
+  <tr><td>RN10</td><td><code>AgendamentoService._notificarEnvolvidos()</code>, que cria uma Notificacao para o cliente e outra para o corretor</td></tr>
+  <tr><td>RN11</td><td><code>Corretor.validarCRECI()</code> (estático)</td></tr>
+  <tr><td>RN12</td><td><code>Imovel.inativar()</code>; <code>ImovelService.listarDisponiveis()</code> e <code>Simulacao.getImoveisCompativeis()</code> só retornam imóveis disponíveis</td></tr>
+</table>
+
+<h2>8. Considerações Finais</h2>
+<p>O diagrama consolida as dez classes definidas para o LUNAR INTEL e corresponde ao código entregue. A estrutura prioriza a separação de responsabilidades e os conceitos de Programação Orientada a Objetos solicitados na disciplina, mantendo as relações necessárias para representar usuários, imóveis, simulações, visitas, favoritos e notificações.</p>
+
+<!-- ===================================================== IMPLEMENTAÇÃO -->
+<div class="quebra"></div>
+<h1 class="atividade">Implementação — Aplicação Web, Persistência e Tratamento de Exceções</h1>
+
+<h2>1. Links da Entrega</h2>
+<table>
+  <tr><th style="width:30%">Item</th><th>Onde encontrar</th></tr>
+  <tr><td>Aplicação web funcionando</td><td>{{LINK_APP}}</td></tr>
+  <tr><td>Repositório (código completo)</td><td>{{LINK_REPO}}</td></tr>
+  <tr><td>Código das classes</td><td>pasta <code>src/models</code> do repositório</td></tr>
+  <tr><td>Mecanismo de persistência</td><td>pasta <code>src/repositories</code> e arquivos <code>data/*.json</code></td></tr>
+  <tr><td>Tratamento de exceções</td><td><code>src/errors/AppError.js</code> e <code>src/middlewares/errorHandler.js</code></td></tr>
+  <tr><td>Demonstração das telas</td><td>item 9 deste documento e pasta <code>docs/telas</code></td></tr>
+  <tr><td>Diagrama de classes atualizado</td><td>Atividade 4 deste documento e pasta <code>docs</code></td></tr>
+</table>
+<p><b>Contas de teste</b> (senha de todas: <code>123456</code>): administrador <code>admin@lunarintel.com</code>; corretores <code>bruno@lunarintel.com</code> e <code>jose@lunarintel.com</code>; clientes <code>cliente@lunarintel.com</code> e <code>marina@lunarintel.com</code>.</p>
+
+<h2>2. Tecnologias e Organização do Código</h2>
+<p>Back-end em <b>Node.js com Express</b>; front-end em <b>HTML, CSS e JavaScript</b>; dados persistidos em <b>arquivos JSON</b>. O código está dividido em camadas (RNF04):</p>
+<table>
+  <tr><th style="width:26%">Pasta</th><th>Responsabilidade</th></tr>
+  <tr><td><code>src/models</code></td><td>As 10 classes do domínio (as mesmas do diagrama)</td></tr>
+  <tr><td><code>src/services</code></td><td>Regras de negócio que envolvem mais de um objeto (agendar visita, vender imóvel, relatório)</td></tr>
+  <tr><td><code>src/repositories</code></td><td>Leitura e gravação dos arquivos JSON</td></tr>
+  <tr><td><code>src/routes</code></td><td>Endpoints da API usados pelas telas</td></tr>
+  <tr><td><code>src/middlewares</code></td><td>Autenticação, permissão por perfil, auditoria e tratamento de erros</td></tr>
+  <tr><td><code>src/errors</code></td><td>Hierarquia de exceções</td></tr>
+  <tr><td><code>public</code></td><td>Telas web (login, cadastro e uma página por perfil)</td></tr>
+  <tr><td><code>tests</code></td><td>48 testes automatizados</td></tr>
+</table>
+<p>Caminho de uma requisição: <i>tela</i> → <i>rota</i> → <i>middleware de login/perfil</i> → <i>service</i> → <i>model + repository</i> → <i>arquivo JSON</i>.</p>
+
+<h2>3. Polimorfismo</h2>
+<p><b>Onde:</b> método <code>getResumoPerfil()</code>, definido em <code>Usuario</code> (<code>src/models/Usuario.js</code>) e sobrescrito em <code>Cliente</code>, <code>Corretor</code> e <code>Administrador</code>.</p>
+<p>O método <code>paraDadosPublicos()</code> de <code>Usuario</code> chama <code>this.getResumoPerfil()</code> sem saber qual é a subclasse. Em tempo de execução, cada objeto executa a sua versão. O resultado aparece na barra superior de todas as telas após o login.</p>
+<pre>// Usuario.js
+paraDadosPublicos() {
+  const { senhaHash, ...dadosPublicos } = this;
+  return { ...dadosPublicos, resumoPerfil: this.getResumoPerfil() };
+}
+
+// Cliente.js
+getResumoPerfil() { return `${this.nome} | Renda mensal: R$ ${this.rendaMensal.toFixed(2)}`; }
+// Corretor.js
+getResumoPerfil() { return `${this.nome} | CRECI ${this.creci} | ${this.totalVendas} venda(s)`; }
+// Administrador.js
+getResumoPerfil() { return `${this.nome} (Administrador, nível ${this.nivelAcesso})`; }</pre>
+<p>Também há polimorfismo na hierarquia de repositórios (todos estendem <code>JsonRepository</code>) e na de exceções (todas estendem <code>AppError</code> e são tratadas de forma única pelo <code>errorHandler</code>).</p>
+
+<h2>4. Sobrecarga</h2>
+<p><b>Onde:</b> <code>Imovel.atualizarPreco()</code> (<code>src/models/Imovel.js</code>).</p>
+<p>JavaScript não permite declarar dois métodos com o mesmo nome. A sobrecarga foi representada por parâmetros: o mesmo método tem duas formas de chamada, com comportamentos diferentes conforme os argumentos.</p>
+<pre>atualizarPreco(valor, ehPercentual = false) {
+  if (typeof valor !== 'number' || Number.isNaN(valor)) throw new ValidationError('Preco invalido.');
+  const novoPreco = ehPercentual ? this.preco * (1 + valor / 100) : valor;
+  if (novoPreco &lt;= 0) throw new ValidationError('O preco do imovel precisa ser maior que zero.');
+  this.preco = Math.round(novoPreco * 100) / 100;
+}
+
+imovel.atualizarPreco(500000);      // forma 1: define o novo preço
+imovel.atualizarPreco(10, true);    // forma 2: reajusta o preço atual em 10%</pre>
+<p>No diagrama, as duas assinaturas aparecem separadamente: <code>atualizarPreco(valor: number)</code> e <code>atualizarPreco(valor: number, ehPercentual: boolean)</code>.</p>
+
+<h2>5. Regras de Negócio</h2>
+<p>As regras RN01 a RN12 (Atividade 2) estão implementadas nos locais indicados na Atividade 4, item 7. Durante a implementação foram acrescentadas regras complementares:</p>
+<table>
+  <tr><th style="width:10%">Regra</th><th>Descrição</th><th style="width:34%">Onde</th></tr>
+  <tr><td>RN13</td><td>Imóvel vendido fica congelado (não pode ser editado nem inativado); só imóvel inativo pode ser reativado</td><td><code>Imovel.inativar()</code>, <code>Imovel.reativar()</code>, <code>ImovelService.atualizar()</code></td></tr>
+  <tr><td>RN14</td><td>A data da visita precisa ser válida e no futuro (pedido e reagendamento)</td><td><code>AgendamentoService._validarDataVisita()</code></td></tr>
+  <tr><td>RN15</td><td>O cliente pode cancelar as próprias visitas, e o corretor é avisado</td><td><code>AgendamentoService.cancelarPeloCliente()</code></td></tr>
+  <tr><td>RN16</td><td>Clientes compatíveis são avisados quando um imóvel é cadastrado ou reativado</td><td><code>ImovelService._avisarClientesCompativeis()</code></td></tr>
+  <tr><td>RN17</td><td>Só é possível favoritar imóvel disponível, sem repetir</td><td><code>FavoritoService.adicionar()</code></td></tr>
+</table>
+<p>O ciclo de vida da visita é controlado pela própria classe <code>Agendamento</code>, por uma tabela de transições válidas: <i>Pendente → Confirmado ou Cancelado</i>; <i>Confirmado → Realizado ou Cancelado</i>; <i>Realizado</i> e <i>Cancelado</i> são estados finais. Qualquer outra transição gera <code>BusinessRuleError</code>.</p>
+<p>Os valores das regras (30%, 80%, 18 a 70 anos, 3 visitas, 7 dias, juros de 1% a.m. e prazo de 360 meses) ficam centralizados em <code>src/config/constants.js</code>.</p>
+
+<h2>6. Persistência</h2>
+<p>A persistência é feita por <b>serialização em JSON</b> (RNF05). Cada entidade é gravada em um arquivo na pasta <code>data/</code> (<code>usuarios.json</code>, <code>imoveis.json</code>, <code>agendamentos.json</code>, <code>simulacoes.json</code>, <code>favoritos.json</code>, <code>notificacoes.json</code>, <code>auditoria.json</code>).</p>
+<ul>
+  <li><b>Armazenamento:</b> a classe genérica <code>JsonRepository</code> implementa o CRUD (<code>create</code>, <code>findAll</code>, <code>findById</code>, <code>update</code>, <code>delete</code>) e grava o arquivo após cada alteração. Cada entidade tem seu repositório, que estende <code>JsonRepository</code> (herança).</li>
+  <li><b>Recuperação:</b> ao ler o arquivo, o repositório recria os objetos das classes corretas por meio de uma função fábrica. Por exemplo, um registro com <code>tipo: "CORRETOR"</code> volta como instância de <code>Corretor</code>, com todos os seus métodos; o endereço de um imóvel volta como instância de <code>Endereco</code>.</li>
+  <li><b>Falhas:</b> erro de leitura ou gravação gera <code>PersistenceError</code>, com mensagem simples para o usuário; o detalhe técnico fica apenas no log do servidor.</li>
+  <li><b>Segurança:</b> as senhas são gravadas apenas como hash <i>bcrypt</i> (RNF03).</li>
+</ul>
+
+<h2>7. Tratamento de Exceções</h2>
+<p>Todas as exceções do sistema herdam de <code>AppError</code>, que guarda a mensagem e o código HTTP. O middleware <code>errorHandler</code> transforma qualquer exceção em uma resposta com mensagem compreensível, exibida na tela em um alerta. Erros não previstos recebem a mensagem genérica "Ocorreu um erro inesperado. Tente novamente mais tarde.", sem stacktrace (RNF06).</p>
+<table>
+  <tr><th style="width:25%">Situação exigida</th><th style="width:20%">Exceção (HTTP)</th><th>Exemplo no sistema e mensagem exibida</th></tr>
+  <tr><td>Dados obrigatórios não informados</td><td><code>ValidationError</code> (400)</td><td>Pedir visita sem data: "Imovel e data da visita sao obrigatorios."</td></tr>
+  <tr><td>Tentativa de cadastrar informação inválida</td><td><code>ValidationError</code> (400)</td><td>CPF com dígitos verificadores errados, CRECI fora do padrão, CEP inválido, idade fora de 18–70: "Idade fora da faixa permitida para simulacao (18 a 70 anos)."</td></tr>
+  <tr><td>Registro não encontrado</td><td><code>NotFoundError</code> (404)</td><td>Abrir imóvel ou visita inexistente: "Registro nao encontrado."</td></tr>
+  <tr><td>Falha ao salvar dados</td><td><code>PersistenceError</code> (500)</td><td>"Nao foi possivel salvar os dados. Nenhuma alteracao foi feita."</td></tr>
+  <tr><td>Falha ao carregar dados</td><td><code>PersistenceError</code> (500)</td><td>Arquivo corrompido ou inacessível: "Nao foi possivel carregar os dados. Tente novamente em instantes."</td></tr>
+  <tr><td>Operação não permitida</td><td><code>ForbiddenError</code> (403) / <code>AuthError</code> (401)</td><td>Corretor editando imóvel de outro corretor (RN06): "Voce so pode alterar imoveis do seu proprio portfolio."; usuário bloqueado perde o acesso imediatamente.</td></tr>
+  <tr><td>Ação em estado incorreto</td><td><code>BusinessRuleError</code> (422)</td><td>Realizar uma visita cancelada: "Nao e possivel transitar de "Cancelado" para "Realizado"."; vender imóvel com visita em aberto (RN02); editar imóvel vendido (RN13).</td></tr>
+</table>
+<p><b>Exemplo equivalente ao da venda do enunciado</b> — uma visita não pode ser solicitada quando:</p>
+<ul>
+  <li>não possui imóvel ou data informados → <code>ValidationError</code>;</li>
+  <li>a data é inválida ou está no passado → <code>ValidationError</code> (RN14);</li>
+  <li>o imóvel não está disponível (vendido ou inativo) → <code>BusinessRuleError</code> (RN03);</li>
+  <li>o cliente já tem 3 visitas em andamento → <code>BusinessRuleError</code> (RN04);</li>
+  <li>o cliente já tem visita em aberto ou pedido recente para o mesmo imóvel → <code>BusinessRuleError</code> (RN09);</li>
+  <li>o usuário logado é um administrador → <code>ForbiddenError</code> (RN07).</li>
+</ul>
+
+<h2>8. Requisitos da Aplicação Web</h2>
+<table>
+  <tr><th style="width:28%">Exigência</th><th>Como foi atendida</th></tr>
+  <tr><td>Páginas ou telas web</td><td>Login, cadastro, painel do cliente, painel do corretor e painel do administrador</td></tr>
+  <tr><td>Formulários</td><td>Login, cadastro (cliente ou corretor), simulação, filtros do catálogo, pedido de visita, cadastro/edição de imóvel, reagendamento, edição de perfil, troca e recuperação de senha</td></tr>
+  <tr><td>Navegação</td><td>Redirecionamento por perfil após o login, abas em cada painel, modais de detalhe e logout</td></tr>
+  <tr><td>Eventos ou ações do usuário</td><td>Simular, filtrar, favoritar, pedir/cancelar visita, confirmar/reagendar/realizar visita, vender/inativar/reativar imóvel, bloquear usuário, exportar relatório em CSV</td></tr>
+  <tr><td>Validação dos dados</td><td>Validação na tela (campos obrigatórios, mínimos) e, principalmente, no servidor (CPF, e-mail, CEP, CRECI, idade, preço, quartos, datas)</td></tr>
+  <tr><td>Mensagens de erro</td><td>Alertas em cada formulário com a mensagem da exceção correspondente</td></tr>
+  <tr><td>Armazenamento e recuperação</td><td>Repositórios JSON com reconstrução dos objetos (item 6)</td></tr>
+  <tr><td>Auditoria (RNF07)</td><td>Cadastros, logins (inclusive os que falharam), logouts e mudanças de status são registrados com data, hora e autor; o administrador consulta na aba Auditoria</td></tr>
+</table>
+
+<h2>9. Demonstração das Principais Telas</h2>
+<figure><img src="../telas/01-login.png"><figcaption>Figura 2 — Tela de login.</figcaption></figure>
+<figure><img src="../telas/02-login-erro.png"><figcaption>Figura 3 — Mensagem de erro ao informar senha incorreta.</figcaption></figure>
+<figure><img src="../telas/03-cadastro.png"><figcaption>Figura 4 — Cadastro de cliente ou corretor.</figcaption></figure>
+<figure><img src="../telas/04-cliente-simulacao.png"><figcaption>Figura 5 — Simulação de financiamento: capacidade de compra, imóveis compatíveis e histórico.</figcaption></figure>
+<figure><img src="../telas/05-cliente-simulacao-erro-idade.png"><figcaption>Figura 6 — Validação no servidor: idade fora da faixa permitida (RN05).</figcaption></figure>
+<figure><img src="../telas/06-cliente-catalogo.png" style="max-height:20cm"><figcaption>Figura 7 — Catálogo de imóveis com filtros.</figcaption></figure>
+<figure><img src="../telas/07-cliente-detalhe-imovel.png"><figcaption>Figura 8 — Detalhe do imóvel com galeria de fotos.</figcaption></figure>
+<figure><img src="../telas/08-cliente-erro-regra-negocio.png"><figcaption>Figura 9 — Regra de negócio violada: visita repetida para o mesmo imóvel (RN09).</figcaption></figure>
+<figure><img src="../telas/09-cliente-visitas.png"><figcaption>Figura 10 — Acompanhamento do status das visitas pelo cliente.</figcaption></figure>
+<figure><img src="../telas/10-corretor-portfolio.png" style="max-height:20cm"><figcaption>Figura 11 — Painel do corretor: indicadores e portfólio com busca e ordenação.</figcaption></figure>
+<figure><img src="../telas/11-corretor-solicitacoes.png"><figcaption>Figura 12 — Solicitações de visita com o contato do cliente.</figcaption></figure>
+<figure><img src="../telas/12-corretor-notificacoes.png"><figcaption>Figura 13 — Notificações do corretor (RN10).</figcaption></figure>
+<figure><img src="../telas/13-admin-usuarios.png"><figcaption>Figura 14 — Administrador: gestão de usuários (bloquear e reativar).</figcaption></figure>
+<figure><img src="../telas/14-admin-imoveis.png"><figcaption>Figura 15 — Administrador: visão de todos os imóveis.</figcaption></figure>
+<figure><img src="../telas/15-admin-relatorio.png"><figcaption>Figura 16 — Administrador: indicadores, desempenho por corretor e exportação em CSV.</figcaption></figure>
+<figure><img src="../telas/16-admin-auditoria.png"><figcaption>Figura 17 — Administrador: log de auditoria (RNF07).</figcaption></figure>
+
+<h2>10. Testes Automatizados</h2>
+<p>O projeto possui 48 testes automatizados (<code>npm test</code>), todos aprovados, que cobrem as classes de domínio (herança, polimorfismo, sobrecarga, transições de status, cálculo da capacidade de compra, validações) e as regras de negócio nos serviços (RN02, RN03, RN04, RN06, RN09, RN10, RN13, RN14, persistência, auditoria, cadastro, recuperação de senha e relatório).</p>
+
+<h2>11. Simplificações Adotadas</h2>
+<ul>
+  <li>Juros de 1% ao mês e prazo de 360 meses fixos (Tabela Price).</li>
+  <li>RF03: o código de recuperação de senha não é enviado por e-mail; ele é exibido no registro do servidor e digitado na tela de login. O restante do fluxo (validade de 15 minutos, uso único, limite de 5 tentativas) está implementado.</li>
+  <li>F09: o cliente edita nome e telefone e informa seus dados financeiros a cada simulação; não há cadastro separado de "preferências de busca".</li>
+  <li>As fotos dos imóveis são informadas por URL (sem upload de arquivo).</li>
+  <li>Conta de administrador é criada apenas pelos dados iniciais do sistema.</li>
+</ul>
+
+<h2>12. Como Executar Localmente</h2>
+<pre>npm install
+npm run seed     # cria os dados de exemplo
+npm start        # http://localhost:3000
+npm test         # testes automatizados</pre>
+
+</body>
+</html>
