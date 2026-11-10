@@ -44,7 +44,12 @@ function auditoria(req, res, next) {
       const sucesso = res.statusCode < 400;
       // registra todas as acoes que deram certo e tambem as tentativas de login que falharam
       if (!sucesso && !caminho.endsWith('/login')) return;
-      const usuarioId = (req.session && req.session.usuarioId) || usuarioAntes || null;
+      // no login, o autor e quem acabou de entrar; se falhou, nao atribui a ninguem
+      // (o navegador pode ter a sessao antiga de outra pessoa)
+      const sessaoAtual = req.session && req.session.usuarioId;
+      const usuarioId = caminho.endsWith('/login')
+        ? (sucesso ? sessaoAtual : null)
+        : sessaoAtual || usuarioAntes || null;
       let detalhe = '';
       if (caminho.endsWith('/login') || caminho.endsWith('/cadastro')) detalhe = `e-mail: ${(req.body && req.body.email) || '-'}`;
       if (caminho.includes('/admin/usuarios/')) detalhe = req.body && req.body.ativo ? 'reativado' : 'bloqueado';
